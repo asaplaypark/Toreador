@@ -21,16 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-const DEPARTMENTS = [
-  { value: "ARCHITECTURE", label: "สถาปัตยกรรมศาสตร์" },
-  { value: "INTERIOR_ARCHITECTURE", label: "สถาปัตยกรรมภายใน" },
-  { value: "LANDSCAPE_ARCHITECTURE", label: "ภูมิสถาปัตยกรรม" },
-  { value: "INDUSTRIAL_DESIGN", label: "การออกแบบอุตสาหกรรม" },
-  { value: "URBAN_PLANNING", label: "การวางแผนภาคและผังเมือง" },
-  { value: "COMMDE", label: "CommDe" },
-  { value: "INDA", label: "INDA" },
-] as const;
+import { DEPARTMENT_OPTIONS } from "@/lib/departments";
 
 type FormState = {
   firstNameTh: string;
@@ -192,7 +183,7 @@ export default function MemberRegisterForm() {
                 <SelectValue placeholder="เลือกภาควิชา" />
               </SelectTrigger>
               <SelectContent>
-                {DEPARTMENTS.map((d) => (
+                {DEPARTMENT_OPTIONS.map((d) => (
                   <SelectItem key={d.value} value={d.value}>
                     {d.label}
                   </SelectItem>
