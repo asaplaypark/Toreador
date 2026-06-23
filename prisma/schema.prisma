@@ -1,0 +1,349 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  HEAD_OF_STUDIO
+  MEMBER
+}
+
+enum AccountStatus {
+  UNACTIVATED
+  ACTIVE
+  SUSPENDED
+}
+
+enum MemberStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  REJECTED
+}
+
+enum Department {
+  ARCHITECTURE
+  INTERIOR_ARCHITECTURE
+  LANDSCAPE_ARCHITECTURE
+  INDUSTRIAL_DESIGN
+  URBAN_PLANNING
+  COMMDE
+  INDA
+}
+
+enum DataSource {
+  SELF_REGISTERED
+  IMPORTED
+  ADMIN_CREATED
+}
+
+enum VisibilityLevel {
+  PUBLIC
+  MEMBERS_ONLY
+  ADMIN_ONLY
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ActivityStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum DonationFund {
+  KATANYU
+  STACARE
+}
+
+enum DonationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+model User {
+  id              String        @id @default(cuid())
+  email           String?       @unique
+  emailVerified   DateTime?
+  passwordHash    String?
+  phoneNumber     String?       @unique
+  phoneVerified   DateTime?
+  lineUserId      String?       @unique
+  lineDisplayName String?
+  linePictureUrl  String?
+  role            Role          @default(MEMBER)
+  accountStatus   AccountStatus @default(ACTIVE)
+  consentGiven    Boolean       @default(false)
+  consentAt       DateTime?
+  consentVersion  String?
+  lastLoginAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  member             Member?
+  accounts           LinkedAccount[]
+  sessions           Session[]
+  newsAuthored       News[]
+  activitiesCreated  Activity[]
+  donationsConfirmed Donation[]    @relation("ConfirmedBy")
+  auditLogs          AuditLog[]
+
+  @@index([email])
+  @@index([phoneNumber])
+  @@index([lineUserId])
+  @@index([accountStatus])
+}
+
+model LinkedAccount {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              String
+  provider          String
+  providerAccountId String
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         Int?
+  createdAt         DateTime @default(now())
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model OTPVerification {
+  id          String    @id @default(cuid())
+  phoneNumber String
+  otp         String
+  purpose     String
+  expiresAt   DateTime
+  usedAt      DateTime?
+  attempts    Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  @@index([phoneNumber, purpose])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model ImportBatch {
+  id            String   @id @default(cuid())
+  name          String
+  sourceUrl     String?
+  totalRows     Int
+  importedCount Int
+  skippedCount  Int
+  importedBy    String
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  members Member[]
+}
+
+model Member {
+  id                String       @id @default(cuid())
+  userId            String       @unique
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstNameTh       String
+  lastNameTh        String
+  firstNameEn       String?
+  lastNameEn        String?
+  birthDate         DateTime
+  department        Department
+  yearOfEntry       Int
+  phone             String?
+  profilePhoto      String?
+  occupation        String?
+  workplace         String?
+  bio               String?
+  lineId            String?
+  website           String?
+  status            MemberStatus @default(PENDING)
+  approvedBy        String?
+  approvedAt        DateTime?
+  rejectedReason    String?
+  dataSource        DataSource   @default(SELF_REGISTERED)
+  importBatchId     String?
+  importBatch       ImportBatch? @relation(fields: [importBatchId], references: [id])
+  isProfileVerified Boolean      @default(false)
+  profileVerifiedAt DateTime?
+  fieldVisibility   Json         @default("{}")
+  extraFields       Json         @default("{}")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  deletedAt         DateTime?
+
+  activityRegistrations ActivityRegistration[]
+  donations             Donation[]
+
+  @@index([department])
+  @@index([yearOfEntry])
+  @@index([status])
+  @@index([importBatchId])
+  @@index([dataSource])
+  @@index([deletedAt])
+}
+
+model DepartmentConfig {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  nameTh       String
+  nameShort    String
+  isActive     Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model ExtraFieldConfig {
+  id                String          @id @default(cuid())
+  key               String          @unique
+  labelTh           String
+  fieldType         String
+  options           String[]
+  isRequired        Boolean         @default(false)
+  defaultVisibility VisibilityLevel @default(MEMBERS_ONLY)
+  isActive          Boolean         @default(true)
+  displayOrder      Int             @default(0)
+  createdAt         DateTime        @default(now())
+}
+
+model News {
+  id          String          @id @default(cuid())
+  title       String
+  slug        String          @unique
+  content     String
+  excerpt     String?
+  coverImage  String?
+  category    String?
+  tags        String[]
+  status      NewsStatus      @default(DRAFT)
+  visibility  VisibilityLevel @default(PUBLIC)
+  authorId    String
+  author      User            @relation(fields: [authorId], references: [id])
+  publishedAt DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deletedAt   DateTime?
+
+  @@index([status, publishedAt])
+  @@index([category])
+  @@index([deletedAt])
+}
+
+model Activity {
+  id                   String          @id @default(cuid())
+  title                String
+  slug                 String          @unique
+  description          String
+  coverImage           String?
+  location             String?
+  onlineLink           String?
+  startDate            DateTime
+  endDate              DateTime?
+  registrationDeadline DateTime?
+  maxSeats             Int?
+  status               ActivityStatus  @default(DRAFT)
+  visibility           VisibilityLevel @default(PUBLIC)
+  allowGuestView       Boolean         @default(true)
+  requireRegistration  Boolean         @default(true)
+  createdBy            String
+  creator              User            @relation(fields: [createdBy], references: [id])
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  deletedAt            DateTime?
+
+  registrations ActivityRegistration[]
+
+  @@index([status, startDate])
+  @@index([deletedAt])
+}
+
+model ActivityRegistration {
+  id          String    @id @default(cuid())
+  activityId  String
+  activity    Activity  @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  memberId    String
+  member      Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  note        String?
+  checkedIn   Boolean   @default(false)
+  checkedInAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@unique([activityId, memberId])
+  @@index([activityId])
+  @@index([memberId])
+}
+
+model Donation {
+  id            String         @id @default(cuid())
+  memberId      String?
+  member        Member?        @relation(fields: [memberId], references: [id])
+  donorName     String
+  donorPhone    String?
+  fund          DonationFund
+  amount        Decimal        @db.Decimal(10, 2)
+  slipUrl       String?
+  note          String?
+  status        DonationStatus @default(PENDING)
+  confirmedById String?
+  confirmedBy   User?          @relation("ConfirmedBy", fields: [confirmedById], references: [id])
+  confirmedAt   DateTime?
+  rejectReason  String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+
+  @@index([fund, status])
+  @@index([memberId])
+  @@index([createdAt])
+  @@index([deletedAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  action     String
+  targetType String
+  targetId   String
+  before     Json?
+  after      Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+}
