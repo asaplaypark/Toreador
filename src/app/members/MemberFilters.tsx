@@ -110,7 +110,7 @@ export default function MemberFilters({
       )}
 
       {isPending && (
-        <span className="text-xs text-muted-foreground shrink-0">กำลังค้นหา...</span>
+        <span className="text-xs text-sepia-mid shrink-0">กำลังค้นหา...</span>
       )}
     </div>
   );

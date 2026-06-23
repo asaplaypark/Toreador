@@ -50,14 +50,14 @@ function LoginForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">เข้าสู่ระบบ</CardTitle>
+        <CardTitle className="text-2xl font-medium">เข้าสู่ระบบ</CardTitle>
         <CardDescription>กรอกอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ</CardDescription>
       </CardHeader>
 
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           {justRegistered && (
-            <div className="rounded-md bg-green-500/10 px-3 py-2 text-sm text-green-700 dark:text-green-400">
+            <div className="rounded-md bg-sepia-cream px-3 py-2 text-sm text-sepia">
               สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ
             </div>
           )}
@@ -101,7 +101,7 @@ function LoginForm() {
 
           <p className="text-sm text-muted-foreground text-center">
             ยังไม่มีบัญชี?{" "}
-            <Link href="/register" className="text-primary underline-offset-4 hover:underline">
+            <Link href="/register" className="text-sepia underline-offset-4 hover:underline font-medium">
               สมัครสมาชิก
             </Link>
           </p>
@@ -113,7 +113,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+    <div className="flex flex-1 items-center justify-center bg-sepia-bg px-4 py-12">
       <Suspense fallback={null}>
         <LoginForm />
       </Suspense>

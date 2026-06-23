@@ -57,10 +57,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+    <div className="flex flex-1 items-center justify-center bg-sepia-bg px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">สมัครสมาชิก</CardTitle>
+          <CardTitle className="text-2xl font-medium">สมัครสมาชิก</CardTitle>
           <CardDescription>สร้างบัญชีใหม่เพื่อเข้าใช้งานระบบ</CardDescription>
         </CardHeader>
 
@@ -119,7 +119,7 @@ export default function RegisterPage() {
 
             <p className="text-sm text-muted-foreground text-center">
               มีบัญชีแล้ว?{" "}
-              <Link href="/login" className="text-primary underline-offset-4 hover:underline">
+              <Link href="/login" className="text-sepia underline-offset-4 hover:underline font-medium">
                 เข้าสู่ระบบ
               </Link>
             </p>

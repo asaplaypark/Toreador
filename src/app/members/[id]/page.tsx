@@ -59,7 +59,7 @@ export default async function MemberDetailPage({
       : null;
 
   return (
-    <div className="min-h-screen bg-muted/40 px-4 py-10">
+    <div className="flex-1 bg-sepia-bg px-4 py-10">
       <div className="mx-auto max-w-2xl space-y-6">
         {/* Back */}
         <Button variant="ghost" size="sm" asChild>
@@ -73,12 +73,12 @@ export default async function MemberDetailPage({
         <Card>
           <CardHeader className="pb-4">
             <div className="flex items-start gap-4">
-              {/* Avatar placeholder */}
-              <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-muted text-2xl font-semibold text-muted-foreground select-none">
+              {/* Avatar */}
+              <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-sepia-mid text-2xl font-semibold text-sepia-cream select-none">
                 {member.firstNameTh.charAt(0)}
               </div>
               <div className="space-y-1">
-                <CardTitle className="text-xl">{nameTh}</CardTitle>
+                <CardTitle className="text-xl font-medium text-charcoal">{nameTh}</CardTitle>
                 {nameEn && (
                   <p className="text-sm text-muted-foreground">{nameEn}</p>
                 )}
@@ -103,7 +103,7 @@ export default async function MemberDetailPage({
         {(member.occupation || member.workplace) && (
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              <CardTitle className="text-xs font-medium text-sepia-mid uppercase tracking-widest">
                 การทำงาน
               </CardTitle>
             </CardHeader>
@@ -126,7 +126,7 @@ export default async function MemberDetailPage({
         {(member.phone || member.lineId || member.website) && (
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              <CardTitle className="text-xs font-medium text-sepia-mid uppercase tracking-widest">
                 ช่องทางติดต่อ
               </CardTitle>
             </CardHeader>
@@ -135,7 +135,7 @@ export default async function MemberDetailPage({
                 <Row icon={<Phone className="size-4" />} label="โทรศัพท์">
                   <a
                     href={`tel:${member.phone}`}
-                    className="text-primary hover:underline underline-offset-4"
+                    className="text-sepia hover:underline underline-offset-4"
                   >
                     {member.phone}
                   </a>
@@ -152,7 +152,7 @@ export default async function MemberDetailPage({
                     href={member.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:underline underline-offset-4 break-all"
+                    className="text-sepia hover:underline underline-offset-4 break-all"
                   >
                     {member.website}
                   </a>
@@ -177,7 +177,7 @@ function Row({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="mt-0.5 shrink-0 text-muted-foreground">{icon}</span>
+      <span className="mt-0.5 shrink-0 text-sepia-light">{icon}</span>
       <div className="min-w-0">
         <p className="text-xs text-muted-foreground mb-0.5">{label}</p>
         <div className="text-sm">{children}</div>

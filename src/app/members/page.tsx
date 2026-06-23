@@ -75,13 +75,13 @@ export default async function MembersPage({
   });
 
   return (
-    <div className="min-h-screen bg-muted/40">
+    <div className="flex-1 bg-sepia-bg">
       <div className="mx-auto max-w-6xl px-4 py-10 space-y-8">
         {/* Header */}
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-              <Users className="size-6" />
+            <h1 className="text-2xl font-medium tracking-tight flex items-center gap-2 text-charcoal">
+              <Users className="size-6 text-sepia-mid" />
               ทำเนียบสมาชิก
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -117,7 +117,7 @@ export default async function MembersPage({
 
         {/* Grid */}
         {members.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+          <div className="flex flex-col items-center justify-center py-24 text-sepia-mid">
             <Users className="size-10 mb-3 opacity-30" />
             <p>ไม่พบสมาชิกที่ตรงกับเงื่อนไข</p>
           </div>
@@ -133,12 +133,12 @@ export default async function MembersPage({
                   key={member.id}
                   className={
                     isLoggedIn
-                      ? "transition-shadow hover:shadow-md cursor-pointer"
+                      ? "transition-all hover:shadow-md hover:border-sepia-pale cursor-pointer"
                       : ""
                   }
                 >
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base">{fullName}</CardTitle>
+                    <CardTitle className="text-base font-medium text-charcoal">{fullName}</CardTitle>
                     <div className="flex flex-wrap gap-1.5 mt-1">
                       <Badge variant="secondary">{dept}</Badge>
                       <Badge variant="outline">รุ่นที่ {gen}</Badge>
@@ -148,14 +148,14 @@ export default async function MembersPage({
                   {isLoggedIn && (member.occupation || member.workplace) && (
                     <CardContent className="pt-0 space-y-1.5">
                       {member.occupation && (
-                        <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Briefcase className="size-3.5 shrink-0" />
+                        <p className="flex items-center gap-2 text-sm text-sepia-mid">
+                          <Briefcase className="size-3.5 shrink-0 text-sepia-light" />
                           {member.occupation}
                         </p>
                       )}
                       {member.workplace && (
-                        <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Building2 className="size-3.5 shrink-0" />
+                        <p className="flex items-center gap-2 text-sm text-sepia-mid">
+                          <Building2 className="size-3.5 shrink-0 text-sepia-light" />
                           {member.workplace}
                         </p>
                       )}

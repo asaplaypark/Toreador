@@ -9,6 +9,7 @@ export default function LogoutButton() {
       variant="outline"
       size="sm"
       onClick={() => signOut({ callbackUrl: "/login" })}
+      className="border-sepia-pale/60 text-sepia-pale hover:bg-white/10 hover:border-sepia-pale hover:text-white"
     >
       ออกจากระบบ
     </Button>
