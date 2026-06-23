@@ -20,7 +20,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="flex-1 bg-sepia-bg px-4 py-10">
+    <div className="flex-1 bg-sepia-bg px-4 py-6 sm:py-10">
       <div className="mx-auto max-w-4xl space-y-6">
         <div className="rounded-lg border border-sepia-pale/60 bg-white p-6 shadow-sm">
           <p className="text-xs font-medium uppercase tracking-widest text-sepia-mid mb-1">

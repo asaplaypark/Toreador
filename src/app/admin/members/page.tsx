@@ -51,7 +51,7 @@ export default async function AdminMembersPage({
   });
 
   return (
-    <div className="flex-1 bg-sepia-bg px-4 py-10">
+    <div className="flex-1 bg-sepia-bg px-4 py-6 sm:py-10">
       <div className="mx-auto max-w-6xl space-y-6">
         <div>
           <h1 className="text-2xl font-medium text-charcoal">จัดการสมาชิก</h1>
@@ -60,13 +60,13 @@ export default async function AdminMembersPage({
 
         <MemberStatusFilter current={status ?? ""} />
 
-        <div className="overflow-hidden rounded-lg border border-sepia-pale/60 bg-white">
+        <div className="overflow-x-auto rounded-lg border border-sepia-pale/60 bg-white">
           {members.length === 0 ? (
             <p className="py-12 text-center text-sm text-muted-foreground">
               ไม่พบข้อมูลสมาชิก
             </p>
           ) : (
-            <table className="w-full text-sm">
+            <table className="min-w-[640px] w-full text-sm">
               <thead className="border-b border-sepia-pale/60 bg-sepia-cream/50">
                 <tr>
                   <th className="px-4 py-3 text-left font-medium text-sepia-mid">ชื่อ</th>

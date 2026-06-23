@@ -332,7 +332,7 @@ export default function MemberRegisterForm() {
       </Card>
 
       <div className="flex justify-end">
-        <Button type="submit" disabled={loading} size="lg">
+        <Button type="submit" disabled={loading} size="lg" className="w-full sm:w-auto">
           {loading ? "กำลังบันทึก..." : "ยืนยันการลงทะเบียน"}
         </Button>
       </div>

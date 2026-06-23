@@ -55,7 +55,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center bg-sepia-bg px-4 py-12">
+    <div className="flex flex-1 items-center justify-center bg-sepia-bg px-4 py-6 sm:py-12">
       <div className="flex w-full max-w-md flex-col items-center">
         <Image
           src="/logo.jpg"

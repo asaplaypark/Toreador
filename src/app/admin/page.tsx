@@ -45,7 +45,7 @@ export default async function AdminPage() {
           <p className="mt-1 text-sm text-muted-foreground">ภาพรวมระบบสมาคมฯ</p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {cards.map(({ title, value, Icon, colorClass }) => (
             <Card key={title}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">

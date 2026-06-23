@@ -21,7 +21,7 @@ export default async function MemberRegisterPage() {
   }
 
   return (
-    <div className="flex-1 bg-sepia-bg px-4 py-12">
+    <div className="flex-1 bg-sepia-bg px-4 py-6 sm:py-12">
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="space-y-1">
           <h1 className="text-2xl font-medium tracking-tight text-charcoal">

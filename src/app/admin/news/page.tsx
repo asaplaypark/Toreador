@@ -55,11 +55,11 @@ export default async function AdminNewsPage() {
           </Button>
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-sepia-pale/60 bg-white">
+        <div className="overflow-x-auto rounded-lg border border-sepia-pale/60 bg-white">
           {newsList.length === 0 ? (
             <p className="py-12 text-center text-sm text-muted-foreground">ยังไม่มีข่าวสาร</p>
           ) : (
-            <table className="w-full text-sm">
+            <table className="min-w-[640px] w-full text-sm">
               <thead className="border-b border-sepia-pale/60 bg-sepia-cream/50">
                 <tr>
                   <th className="px-4 py-3 text-left font-medium text-sepia-mid">หัวข้อ</th>

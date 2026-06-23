@@ -55,8 +55,8 @@ export default async function NewsDetailPage({
   const canRead = !isMembersOnly || isLoggedIn;
 
   return (
-    <div className="flex-1 bg-sepia-bg px-4 py-10">
-      <div className="mx-auto max-w-3xl space-y-6">
+    <div className="flex-1 bg-sepia-bg px-4 py-6 sm:py-10">
+      <div className="mx-auto max-w-3xl space-y-5 sm:space-y-6">
         {/* Back */}
         <Button variant="ghost" size="sm" asChild>
           <Link href="/news">
@@ -77,7 +77,7 @@ export default async function NewsDetailPage({
             )}
           </div>
 
-          <h1 className="text-2xl font-medium leading-snug text-charcoal sm:text-3xl">
+          <h1 className="text-xl font-medium leading-snug text-charcoal sm:text-2xl lg:text-3xl">
             {news.title}
           </h1>
 
