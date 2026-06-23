@@ -160,6 +160,36 @@
     background-color: var(--sepia-pale);
   }
 
+  .news-content h1, .news-content h2, .news-content h3,
+  .news-content h4, .news-content h5, .news-content h6 {
+    font-weight: 600;
+    line-height: 1.35;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    color: var(--charcoal);
+  }
+  .news-content h1 { font-size: 1.5rem; }
+  .news-content h2 { font-size: 1.25rem; }
+  .news-content h3 { font-size: 1.125rem; }
+  .news-content p  { margin-bottom: 1em; }
+  .news-content ul, .news-content ol { padding-left: 1.5em; margin-bottom: 1em; }
+  .news-content ul { list-style-type: disc; }
+  .news-content ol { list-style-type: decimal; }
+  .news-content li { margin-bottom: 0.25em; }
+  .news-content a  { color: var(--sepia); text-underline-offset: 4px; }
+  .news-content a:hover { text-decoration: underline; }
+  .news-content blockquote {
+    border-left: 3px solid var(--sepia-pale);
+    padding-left: 1em;
+    margin-left: 0;
+    color: var(--sepia-mid);
+    font-style: italic;
+  }
+  .news-content img { max-width: 100%; border-radius: 0.5rem; }
+  .news-content strong { font-weight: 600; }
+  .news-content em { font-style: italic; }
+  .news-content hr { border-color: var(--sepia-pale); margin: 1.5em 0; }
+
   .navbar-logout {
     border-radius: 0.5rem;
     border: 1px solid rgba(255, 255, 255, 0.5);

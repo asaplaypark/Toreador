@@ -1,0 +1,6 @@
+export function generateSlug(_title: string): string {
+  const now = new Date();
+  const date = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+  const rand = Math.random().toString(36).slice(2, 9);
+  return `news-${rand}-${date}`;
+}

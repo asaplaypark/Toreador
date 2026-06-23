@@ -25,6 +25,9 @@ export default async function Navbar() {
 
         {/* Nav links */}
         <nav className="flex items-center gap-1 sm:gap-2">
+          <Link href="/news" className="navbar-link">
+            ข่าวสาร
+          </Link>
           <Link href="/members" className="navbar-link">
             ทำเนียบสมาชิก
           </Link>
@@ -34,6 +37,12 @@ export default async function Navbar() {
               <Link href="/dashboard" className="navbar-link">
                 แดชบอร์ด
               </Link>
+              {(session.user.role === "ADMIN" ||
+                session.user.role === "SUPER_ADMIN") && (
+                <Link href="/admin" className="navbar-link">
+                  จัดการระบบ
+                </Link>
+              )}
               <div className="ml-1">
                 <LogoutButton />
               </div>
