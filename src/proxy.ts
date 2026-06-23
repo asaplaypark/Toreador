@@ -1,7 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard"];
+const protectedRoutes = ["/dashboard", "/member"];
 const authRoutes = ["/login", "/register"];
 
 export default async function proxy(req: NextRequest) {
