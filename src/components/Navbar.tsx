@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import LogoutButton from "./LogoutButton";
@@ -10,7 +11,15 @@ export default async function Navbar() {
     <header className="navbar-root sticky top-0 z-50 w-full shadow-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
-        <Link href="/" className="navbar-logo">
+        <Link href="/" className="navbar-logo" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <Image
+            src="/logo.jpg"
+            alt="Toreador logo"
+            height={36}
+            width={36}
+            className="rounded-full object-cover"
+            style={{ width: "auto", height: "36px" }}
+          />
           TOREADOR
         </Link>
 
