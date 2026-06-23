@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
+import NewsCoverUpload from "@/components/NewsCoverUpload";
 
 export type NewsFormValues = {
   title: string;
@@ -237,28 +238,10 @@ export default function NewsForm({
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="coverImage">URL รูปภาพปก</Label>
-            <Input
-              id="coverImage"
-              value={form.coverImage}
-              onChange={(e) => set("coverImage", e.target.value)}
-              placeholder="https://example.com/image.jpg"
-            />
-            {form.coverImage && (
-              <div className="mt-2 overflow-hidden rounded-md border border-sepia-pale/60">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={form.coverImage}
-                  alt="preview"
-                  className="max-h-40 w-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
-                />
-              </div>
-            )}
-          </div>
+          <NewsCoverUpload
+            value={form.coverImage}
+            onChange={(url) => set("coverImage", url)}
+          />
         </CardContent>
       </Card>
 

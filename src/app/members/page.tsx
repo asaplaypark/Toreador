@@ -9,11 +9,11 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import MemberFilters from "./MemberFilters";
 import { Department, MemberStatus, Prisma } from "@prisma/client";
 import { Briefcase, Building2, Users } from "lucide-react";
+import Avatar from "@/components/Avatar";
 
 type SearchParams = {
   search?: string;
@@ -70,6 +70,7 @@ export default async function MembersPage({
       yearOfEntry: true,
       occupation: true,
       workplace: true,
+      profilePhoto: true,
     },
     orderBy: [{ yearOfEntry: "asc" }, { firstNameTh: "asc" }],
   });
@@ -138,10 +139,19 @@ export default async function MembersPage({
                   }
                 >
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base font-medium text-charcoal">{fullName}</CardTitle>
-                    <div className="flex flex-wrap gap-1.5 mt-1">
-                      <Badge variant="secondary">{dept}</Badge>
-                      <Badge variant="outline">รุ่นที่ {gen}</Badge>
+                    <div className="flex items-center gap-3">
+                      <Avatar
+                        url={member.profilePhoto}
+                        initials={member.firstNameTh}
+                        size="md"
+                      />
+                      <div className="min-w-0">
+                        <p className="truncate font-medium text-charcoal">{fullName}</p>
+                        <div className="flex flex-wrap gap-1.5 mt-1">
+                          <Badge variant="secondary">{dept}</Badge>
+                          <Badge variant="outline">รุ่นที่ {gen}</Badge>
+                        </div>
+                      </div>
                     </div>
                   </CardHeader>
 

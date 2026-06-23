@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/card";
 import { MemberStatus } from "@prisma/client";
 import Link from "next/link";
-import { ArrowLeft, Briefcase, Building2, Calendar, Globe, MessageCircle, Phone, User } from "lucide-react";
+import { ArrowLeft, Briefcase, Building2, Globe, MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Avatar from "@/components/Avatar";
 
 export default async function MemberDetailPage({
   params,
@@ -74,9 +75,12 @@ export default async function MemberDetailPage({
           <CardHeader className="pb-4">
             <div className="flex items-start gap-4">
               {/* Avatar */}
-              <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-sepia-mid text-2xl font-semibold text-sepia-cream select-none">
-                {member.firstNameTh.charAt(0)}
-              </div>
+              <Avatar
+                url={member.profilePhoto}
+                initials={member.firstNameTh}
+                size="lg"
+                alt={`${member.firstNameTh} ${member.lastNameTh}`}
+              />
               <div className="space-y-1">
                 <CardTitle className="text-xl font-medium text-charcoal">{nameTh}</CardTitle>
                 {nameEn && (

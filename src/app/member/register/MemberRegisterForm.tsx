@@ -22,6 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DEPARTMENT_OPTIONS } from "@/lib/departments";
+import AvatarUpload from "@/components/AvatarUpload";
 
 type FormState = {
   firstNameTh: string;
@@ -37,6 +38,7 @@ type FormState = {
   lineId: string;
   website: string;
   bio: string;
+  profilePhoto: string;
   consentGiven: boolean;
 };
 
@@ -54,6 +56,7 @@ const INITIAL: FormState = {
   lineId: "",
   website: "",
   bio: "",
+  profilePhoto: "",
   consentGiven: false,
 };
 
@@ -109,6 +112,15 @@ export default function MemberRegisterForm() {
           {error}
         </div>
       )}
+
+      {/* รูปโปรไฟล์ */}
+      <div className="flex justify-center">
+        <AvatarUpload
+          initials={form.firstNameTh || "ท"}
+          initialUrl={form.profilePhoto || null}
+          onUpload={(url) => set("profilePhoto", url)}
+        />
+      </div>
 
       {/* ข้อมูลชื่อ */}
       <Card>

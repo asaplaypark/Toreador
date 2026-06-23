@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
       lineId,
       website,
       bio,
+      profilePhoto,
       consentGiven,
     } = body;
 
@@ -95,6 +96,7 @@ export async function POST(req: NextRequest) {
           lineId: lineId?.trim() || null,
           website: website?.trim() || null,
           bio: bio?.trim() || null,
+          profilePhoto: profilePhoto?.trim() || null,
           dataSource: "SELF_REGISTERED",
         },
       }),
