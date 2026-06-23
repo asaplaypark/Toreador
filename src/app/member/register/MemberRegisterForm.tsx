@@ -23,13 +23,13 @@ import {
 } from "@/components/ui/card";
 
 const DEPARTMENTS = [
-  { value: "ARCHITECTURE", label: "สถาปัตยกรรม" },
+  { value: "ARCHITECTURE", label: "สถาปัตยกรรมศาสตร์" },
   { value: "INTERIOR_ARCHITECTURE", label: "สถาปัตยกรรมภายใน" },
   { value: "LANDSCAPE_ARCHITECTURE", label: "ภูมิสถาปัตยกรรม" },
-  { value: "INDUSTRIAL_DESIGN", label: "อุตสาหกรรมศิลป์" },
-  { value: "URBAN_PLANNING", label: "การวางผังเมือง" },
-  { value: "COMMDE", label: "นิเทศศิลป์ (CommDe)" },
-  { value: "INDA", label: "การออกแบบอุตสาหกรรม (INDA)" },
+  { value: "INDUSTRIAL_DESIGN", label: "การออกแบบอุตสาหกรรม" },
+  { value: "URBAN_PLANNING", label: "การวางแผนภาคและผังเมือง" },
+  { value: "COMMDE", label: "CommDe" },
+  { value: "INDA", label: "INDA" },
 ] as const;
 
 type FormState = {
@@ -328,9 +328,9 @@ export default function MemberRegisterForm() {
               className="cursor-pointer text-sm leading-relaxed"
             >
               ข้าพเจ้ายินยอมให้สมาคมศิษย์เก่าคณะสถาปัตยกรรมศาสตร์
-              จุฬาลงกรณ์มหาวิทยาลัย เก็บรวบรวมและใช้ข้อมูลส่วนบุคคลของข้าพเจ้า
-              เพื่อวัตถุประสงค์ในการบริหารจัดการสมาชิกและการติดต่อสื่อสาร
-              ตาม{" "}
+              จุฬาลงกรณ์มหาวิทยาลัย เก็บรวบรวม และใช้ข้อมูลส่วนบุคคลของข้าพเจ้า
+              เพื่อวัตถุประสงค์ในการบริหารจัดการสมาชิก และการติดต่อสื่อสาร
+              ตามภารกิจของสมาคมฯ ตาม{" "}
               <span className="font-medium text-primary">
                 นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)
               </span>{" "}
