@@ -66,6 +66,7 @@ export default async function MembersPage({
       id: true,
       firstNameTh: true,
       lastNameTh: true,
+      nickname: true,
       department: true,
       yearOfEntry: true,
       occupation: true,
@@ -127,7 +128,9 @@ export default async function MembersPage({
             {members.map((member) => {
               const gen = getGeneration(member.yearOfEntry);
               const dept = getDeptLabel(member.department);
-              const fullName = `${member.firstNameTh} ${member.lastNameTh}`;
+              const fullName = member.nickname
+                ? `${member.firstNameTh} ${member.lastNameTh} (${member.nickname})`
+                : `${member.firstNameTh} ${member.lastNameTh}`;
 
               const card = (
                 <Card

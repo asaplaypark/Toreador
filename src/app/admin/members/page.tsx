@@ -89,6 +89,9 @@ export default async function AdminMembersPage({
                         className="font-medium text-charcoal underline-offset-4 hover:text-sepia hover:underline"
                       >
                         {member.firstNameTh} {member.lastNameTh}
+                        {member.nickname && (
+                          <span className="ml-1 font-normal text-muted-foreground">({member.nickname})</span>
+                        )}
                       </Link>
                     </td>
                     <td className="hidden px-4 py-3 text-muted-foreground sm:table-cell">

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Department } from "@prisma/client";
+import { sendMemberRegistrationEmail } from "@/lib/email/templates/memberRegistration";
 
 const VALID_DEPARTMENTS = Object.values(Department);
 
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest) {
       lastNameTh,
       firstNameEn,
       lastNameEn,
+      nickname,
       birthDate,
       department,
       yearOfEntry,
@@ -87,6 +89,7 @@ export async function POST(req: NextRequest) {
           lastNameTh: lastNameTh.trim(),
           firstNameEn: firstNameEn?.trim() || null,
           lastNameEn: lastNameEn?.trim() || null,
+          nickname: nickname?.trim() || null,
           birthDate: new Date(birthDate),
           department: department as Department,
           yearOfEntry: yearNum,
@@ -109,6 +112,26 @@ export async function POST(req: NextRequest) {
         },
       }),
     ]);
+
+    if (session.user.email) {
+      void sendMemberRegistrationEmail({
+        name: `${firstNameTh.trim()} ${lastNameTh.trim()}`,
+        email: session.user.email,
+        department: department as string,
+      }).then((result) => {
+        if (result.success) {
+          void prisma.auditLog.create({
+            data: {
+              userId: session.user.id,
+              action: "SEND_EMAIL",
+              targetType: "Member",
+              targetId: session.user.id,
+              after: { template: "memberRegistration", to: session.user.email },
+            },
+          });
+        }
+      });
+    }
 
     return NextResponse.json({ message: "ลงทะเบียนสำเร็จ" }, { status: 201 });
   } catch {

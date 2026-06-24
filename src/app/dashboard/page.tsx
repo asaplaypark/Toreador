@@ -18,6 +18,7 @@ export default async function DashboardPage() {
       id: true,
       firstNameTh: true,
       lastNameTh: true,
+      nickname: true,
       department: true,
       yearOfEntry: true,
       profilePhoto: true,
@@ -46,6 +47,9 @@ export default async function DashboardPage() {
               </p>
               <h1 className="text-xl font-medium text-charcoal">
                 คุณ{member.firstNameTh} {member.lastNameTh}
+                {member.nickname && (
+                  <span className="ml-1 text-lg font-normal text-sepia-mid">({member.nickname})</span>
+                )}
               </h1>
               <p className="mt-0.5 text-sm text-muted-foreground">
                 {session.user?.email}

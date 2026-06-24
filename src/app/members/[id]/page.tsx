@@ -37,6 +37,7 @@ export default async function MemberDetailPage({
       lastNameTh: true,
       firstNameEn: true,
       lastNameEn: true,
+      nickname: true,
       department: true,
       yearOfEntry: true,
       occupation: true,
@@ -83,6 +84,9 @@ export default async function MemberDetailPage({
               />
               <div className="space-y-1">
                 <CardTitle className="text-xl font-medium text-charcoal">{nameTh}</CardTitle>
+                {member.nickname && (
+                  <p className="text-sm text-sepia-mid">ชื่อเล่น: {member.nickname}</p>
+                )}
                 {nameEn && (
                   <p className="text-sm text-muted-foreground">{nameEn}</p>
                 )}

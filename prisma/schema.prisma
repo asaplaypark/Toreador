@@ -179,6 +179,7 @@ model Member {
   lastNameTh        String
   firstNameEn       String?
   lastNameEn        String?
+  nickname          String?
   birthDate         DateTime
   department        Department
   yearOfEntry       Int

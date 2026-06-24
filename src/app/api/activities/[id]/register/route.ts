@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { sendActivityRegistrationEmail } from "@/lib/email/templates/activityRegistration";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -86,6 +87,28 @@ export async function POST(req: Request, { params }: Ctx) {
         note: note?.trim() || null,
       },
     });
+
+    void sendActivityRegistrationEmail({
+      registrantName: registrantName.trim(),
+      registrantEmail: registrantEmail.trim().toLowerCase(),
+      activityTitle: activity.title,
+      activityDate: activity.startDate.toLocaleDateString("th-TH", { dateStyle: "long" }),
+      activityLocation: activity.location,
+      activitySlug: activity.slug,
+    }).then((result) => {
+      if (result.success && memberId) {
+        void prisma.auditLog.create({
+          data: {
+            userId: memberId,
+            action: "SEND_EMAIL",
+            targetType: "ActivityRegistration",
+            targetId: reg.id,
+            after: { template: "activityRegistration", to: registrantEmail.trim().toLowerCase() },
+          },
+        });
+      }
+    });
+
     return NextResponse.json(reg, { status: 201 });
   } catch (err) {
     console.error("Register error:", err);

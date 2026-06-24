@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import { Check, ExternalLink } from "lucide-react";
 
 export type Setting = {
   key: string;
@@ -22,6 +23,7 @@ const GROUPS: { key: string; label: string }[] = [
   { key: "about", label: "เกี่ยวกับ" },
   { key: "footer", label: "Footer" },
   { key: "theme", label: "ธีม" },
+  { key: "email", label: "Email" },
 ];
 
 export default function SettingsForm({ settings }: { settings: Setting[] }) {
@@ -162,9 +164,20 @@ export default function SettingsForm({ settings }: { settings: Setting[] }) {
       {/* Fields */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-xs font-medium uppercase tracking-widest text-sepia-mid">
-            {GROUPS.find((g) => g.key === activeGroup)?.label}
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xs font-medium uppercase tracking-widest text-sepia-mid">
+              {GROUPS.find((g) => g.key === activeGroup)?.label}
+            </CardTitle>
+            {activeGroup === "email" && (
+              <Link
+                href="/admin/email-preview"
+                className="flex items-center gap-1 text-xs text-sepia hover:text-sepia-dark transition-colors"
+              >
+                <ExternalLink className="size-3" />
+                ดู Email Preview
+              </Link>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="space-y-5">
           {groupSettings.map((s) => (

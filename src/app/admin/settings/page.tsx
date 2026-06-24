@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { ensureEmailSettings } from "@/lib/site-settings";
 import SettingsForm, { type Setting } from "./SettingsForm";
 
 export default async function AdminSettingsPage() {
+  await ensureEmailSettings();
   const rows = await prisma.siteSettings.findMany({ orderBy: { group: "asc" } });
 
   const settings: Setting[] = rows.map((r) => ({

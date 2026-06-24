@@ -29,6 +29,7 @@ type FormState = {
   lastNameTh: string;
   firstNameEn: string;
   lastNameEn: string;
+  nickname: string;
   birthDate: string;
   department: string;
   yearOfEntry: string;
@@ -47,6 +48,7 @@ const INITIAL: FormState = {
   lastNameTh: "",
   firstNameEn: "",
   lastNameEn: "",
+  nickname: "",
   birthDate: "",
   department: "",
   yearOfEntry: "",
@@ -171,6 +173,15 @@ export default function MemberRegisterForm() {
               value={form.lastNameEn}
               onChange={(e) => set("lastNameEn", e.target.value)}
               placeholder="e.g. Jaidee"
+            />
+          </div>
+          <div className="space-y-2 sm:col-span-2">
+            <Label htmlFor="nickname">ชื่อเล่น</Label>
+            <Input
+              id="nickname"
+              value={form.nickname}
+              onChange={(e) => set("nickname", e.target.value)}
+              placeholder="เช่น แบงค์, นุ่น, โบ๊ท"
             />
           </div>
         </CardContent>

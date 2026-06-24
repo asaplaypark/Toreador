@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { sendActivityCancellationEmail } from "@/lib/email/templates/activityCancellation";
 
 const ALLOWED = ["ADMIN", "SUPER_ADMIN"];
 type Ctx = { params: Promise<{ id: string }> };
@@ -41,6 +42,34 @@ export async function PATCH(req: Request, { params }: Ctx) {
       ...(status !== undefined && { status: status as "DRAFT" | "PUBLISHED" | "CANCELLED" | "COMPLETED" }),
     },
   });
+
+  if (status === "CANCELLED" && existing.status !== "CANCELLED") {
+    const registrations = await prisma.activityRegistration.findMany({
+      where: { activityId: id },
+      select: { id: true, registrantName: true, registrantEmail: true },
+    });
+    const dateStr = updated.startDate.toLocaleDateString("th-TH", { dateStyle: "long" });
+    for (const r of registrations) {
+      void sendActivityCancellationEmail({
+        registrantName: r.registrantName,
+        registrantEmail: r.registrantEmail,
+        activityTitle: updated.title,
+        activityDate: dateStr,
+      }).then((result) => {
+        if (result.success) {
+          void prisma.auditLog.create({
+            data: {
+              userId: session.user.id,
+              action: "SEND_EMAIL",
+              targetType: "ActivityRegistration",
+              targetId: r.id,
+              after: { template: "activityCancellation", to: r.registrantEmail },
+            },
+          });
+        }
+      });
+    }
+  }
 
   return NextResponse.json(updated);
 }

@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { MemberStatus } from "@prisma/client";
+import { sendMemberApprovedEmail } from "@/lib/email/templates/memberApproved";
 
 const ALLOWED_ROLES = ["ADMIN", "SUPER_ADMIN"];
 const VALID_STATUSES = Object.values(MemberStatus) as string[];
@@ -27,6 +28,7 @@ export async function PATCH(
 
   const member = await prisma.member.findUnique({
     where: { id, deletedAt: null },
+    include: { user: { select: { email: true } } },
   });
   if (!member) {
     return NextResponse.json({ error: "ไม่พบสมาชิก" }, { status: 404 });
@@ -53,6 +55,25 @@ export async function PATCH(
       },
     }),
   ]);
+
+  if (status === "ACTIVE" && member.user?.email) {
+    void sendMemberApprovedEmail({
+      name: `${member.firstNameTh} ${member.lastNameTh}`,
+      email: member.user.email,
+    }).then((result) => {
+      if (result.success) {
+        void prisma.auditLog.create({
+          data: {
+            userId: session.user.id,
+            action: "SEND_EMAIL",
+            targetType: "Member",
+            targetId: id,
+            after: { template: "memberApproved", to: member.user?.email },
+          },
+        });
+      }
+    });
+  }
 
   return NextResponse.json(updated);
 }

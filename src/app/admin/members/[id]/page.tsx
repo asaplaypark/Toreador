@@ -86,6 +86,9 @@ export default async function AdminMemberDetailPage({
             <Row label="ชื่อ-นามสกุล (ไทย)">
               {member.firstNameTh} {member.lastNameTh}
             </Row>
+            {member.nickname && (
+              <Row label="ชื่อเล่น">{member.nickname}</Row>
+            )}
             {member.firstNameEn && (
               <Row label="ชื่อ-นามสกุล (อังกฤษ)">
                 {member.firstNameEn} {member.lastNameEn}
