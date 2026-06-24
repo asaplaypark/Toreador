@@ -39,6 +39,12 @@ export default async function AdminLayout({
           >
             ข่าวสาร
           </Link>
+          <Link
+            href="/admin/settings"
+            className="rounded px-3 py-1 text-xs font-medium text-sepia transition-colors hover:bg-sepia-pale/40"
+          >
+            การตั้งค่า
+          </Link>
         </div>
       </div>
       {children}

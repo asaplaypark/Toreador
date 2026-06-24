@@ -110,12 +110,20 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    -webkit-hyphens: none;
+    hyphens: none;
   }
   body {
     @apply bg-background text-foreground;
   }
   html {
     @apply font-sans;
+  }
+  p, span, div, h1, h2, h3, h4, h5, h6, a, li, td, th, label, button {
+    word-break: keep-all;
+    line-break: strict;
   }
 }
 

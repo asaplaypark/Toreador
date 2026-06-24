@@ -3,10 +3,11 @@ import { Prompt } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const prompt = Prompt({
   subsets: ["thai", "latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -27,6 +28,7 @@ export default function RootLayout({
         <SessionProvider>
           <Navbar />
           <div className="flex-1 flex flex-col">{children}</div>
+          <Footer />
         </SessionProvider>
       </body>
     </html>

@@ -2,11 +2,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getSetting } from "@/lib/site-settings";
 import LogoutButton from "./LogoutButton";
 import MobileMenu from "./MobileMenu";
 
 export default async function Navbar() {
-  const session = await getServerSession(authOptions);
+  const [session, siteName] = await Promise.all([
+    getServerSession(authOptions),
+    getSetting("site_name", "TOREADOR"),
+  ]);
   const isAdmin =
     session?.user?.role === "ADMIN" || session?.user?.role === "SUPER_ADMIN";
 
@@ -27,7 +31,7 @@ export default async function Navbar() {
             className="rounded-full object-cover"
             style={{ width: "auto", height: "36px" }}
           />
-          TOREADOR
+          {siteName}
         </Link>
 
         {/* Desktop nav — hidden on mobile */}
