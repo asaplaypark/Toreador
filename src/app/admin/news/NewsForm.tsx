@@ -14,8 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff } from "lucide-react";
 import NewsCoverUpload from "@/components/NewsCoverUpload";
+import RichTextEditor from "@/components/RichTextEditor";
 
 export type NewsFormValues = {
   title: string;
@@ -68,7 +68,6 @@ export default function NewsForm({
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
 
   function set(key: keyof NewsFormValues, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -82,7 +81,8 @@ export default function NewsForm({
       setError("กรุณากรอกหัวข้อข่าว");
       return;
     }
-    if (!form.content.trim()) {
+    const contentText = form.content.replace(/<[^>]*>/g, "").trim();
+    if (!contentText) {
       setError("กรุณากรอกเนื้อหา");
       return;
     }
@@ -164,48 +164,12 @@ export default function NewsForm({
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="content">เนื้อหา * (รองรับ HTML)</Label>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowPreview((v) => !v)}
-                className="text-xs"
-              >
-                {showPreview ? (
-                  <>
-                    <EyeOff className="mr-1 size-3" /> ซ่อน Preview
-                  </>
-                ) : (
-                  <>
-                    <Eye className="mr-1 size-3" /> Preview
-                  </>
-                )}
-              </Button>
-            </div>
-            <Textarea
-              id="content"
+            <Label>เนื้อหา *</Label>
+            <RichTextEditor
               value={form.content}
-              onChange={(e) => set("content", e.target.value)}
-              placeholder="<p>เนื้อหาข่าว...</p>"
-              rows={12}
-              className="font-mono text-xs"
-              required
+              onChange={(html) => set("content", html)}
             />
           </div>
-
-          {showPreview && (
-            <div className="rounded-lg border border-sepia-pale/60 bg-white p-6">
-              <p className="mb-3 text-xs font-medium uppercase tracking-widest text-sepia-mid">
-                Preview
-              </p>
-              <div
-                className="news-content text-sm"
-                dangerouslySetInnerHTML={{ __html: form.content }}
-              />
-            </div>
-          )}
         </CardContent>
       </Card>
 

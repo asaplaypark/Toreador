@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, Lock } from "lucide-react";
+import RichTextViewer from "@/components/RichTextViewer";
 
 function authorName(author: {
   email: string | null;
@@ -112,10 +113,7 @@ export default async function NewsDetailPage({
 
         {/* Content */}
         {canRead ? (
-          <div
-            className="news-content text-sm leading-relaxed text-charcoal"
-            dangerouslySetInnerHTML={{ __html: news.content }}
-          />
+          <RichTextViewer html={news.content} className="text-sm" />
         ) : (
           <div className="rounded-lg border border-sepia-pale/60 bg-sepia-cream/60 px-6 py-12 text-center">
             <Lock className="mx-auto mb-3 size-8 text-sepia-light" />
