@@ -6,7 +6,7 @@ import { sanitizeHtml } from "@/lib/sanitize";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, BookOpen, CalendarDays } from "lucide-react";
+import { Users, BookOpen, CalendarDays, MapPin } from "lucide-react";
 
 export default async function LandingPage() {
   const [settings, session, memberCount, distinctGens, latestNews] =
@@ -32,6 +32,30 @@ export default async function LandingPage() {
         take: 3,
       }),
     ]);
+
+  const isLoggedInForActivities = !!session?.user?.id;
+  const upcomingActivities = await prisma.activity.findMany({
+    where: {
+      status: "PUBLISHED",
+      deletedAt: null,
+      startDate: { gte: new Date() },
+      ...(isLoggedInForActivities
+        ? {}
+        : { allowGuestView: true, visibility: "PUBLIC" }),
+    },
+    select: {
+      slug: true,
+      title: true,
+      coverImage: true,
+      location: true,
+      startDate: true,
+      maxSeats: true,
+      requireRegistration: true,
+      _count: { select: { registrations: true } },
+    },
+    orderBy: { startDate: "asc" },
+    take: 3,
+  });
 
   const isLoggedIn = !!session?.user?.id;
   let memberName = "";
@@ -207,6 +231,81 @@ export default async function LandingPage() {
                   </div>
                 </Link>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Upcoming Activities ── */}
+      {upcomingActivities.length > 0 && (
+        <section className="bg-sepia-cream/50 px-4 py-16">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-8 flex items-center justify-between">
+              <h2 className="text-2xl font-medium text-charcoal">กิจกรรมที่กำลังจะมา</h2>
+              <Button asChild variant="outline">
+                <Link href="/activities">ดูกิจกรรมทั้งหมด</Link>
+              </Button>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {upcomingActivities.map((a) => {
+                const isFull =
+                  a.requireRegistration &&
+                  a.maxSeats !== null &&
+                  a._count.registrations >= a.maxSeats;
+                const seatsLeft =
+                  a.maxSeats !== null ? a.maxSeats - a._count.registrations : null;
+
+                return (
+                  <Link
+                    key={a.slug}
+                    href={`/activities/${a.slug}`}
+                    className="group flex flex-col overflow-hidden rounded-lg border border-sepia-pale/60 bg-white shadow-sm transition-shadow hover:shadow-md"
+                  >
+                    <div className="relative aspect-video w-full overflow-hidden bg-sepia-cream">
+                      {a.coverImage ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={a.coverImage}
+                          alt={a.title}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center">
+                          <CalendarDays className="size-10 text-sepia-pale" />
+                        </div>
+                      )}
+                      {isFull && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                          <Badge className="bg-destructive text-white">เต็มแล้ว</Badge>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-1 flex-col gap-2 p-4">
+                      <h3 className="line-clamp-2 font-medium text-charcoal transition-colors group-hover:text-sepia">
+                        {a.title}
+                      </h3>
+                      <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <CalendarDays className="size-3.5 shrink-0" />
+                        {a.startDate.toLocaleDateString("th-TH", {
+                          year: "numeric", month: "long", day: "numeric",
+                        })}
+                      </p>
+                      {a.location && (
+                        <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <MapPin className="size-3.5 shrink-0" />
+                          <span className="line-clamp-1">{a.location}</span>
+                        </p>
+                      )}
+                      {a.requireRegistration && seatsLeft !== null && !isFull && (
+                        <p className="mt-auto pt-2 text-xs text-muted-foreground">
+                          ว่าง {seatsLeft} ที่นั่ง
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>

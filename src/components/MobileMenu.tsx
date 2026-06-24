@@ -41,6 +41,7 @@ export default function MobileMenu({ isLoggedIn, role }: Props) {
           style={{ backgroundColor: "var(--sepia-dark)", border: "1px solid rgba(255,255,255,0.12)" }}
         >
           <Link href="/news" className={linkClass}>ข่าวสาร</Link>
+          <Link href="/activities" className={linkClass}>กิจกรรม</Link>
           <Link href="/members" className={linkClass}>ทำเนียบสมาชิก</Link>
 
           {isLoggedIn ? (

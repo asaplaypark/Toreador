@@ -40,6 +40,12 @@ export default async function AdminLayout({
             ข่าวสาร
           </Link>
           <Link
+            href="/admin/activities"
+            className="rounded px-3 py-1 text-xs font-medium text-sepia transition-colors hover:bg-sepia-pale/40"
+          >
+            กิจกรรม
+          </Link>
+          <Link
             href="/admin/settings"
             className="rounded px-3 py-1 text-xs font-medium text-sepia transition-colors hover:bg-sepia-pale/40"
           >

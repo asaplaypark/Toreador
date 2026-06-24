@@ -290,16 +290,21 @@ model Activity {
 }
 
 model ActivityRegistration {
-  id          String    @id @default(cuid())
-  activityId  String
-  activity    Activity  @relation(fields: [activityId], references: [id], onDelete: Cascade)
-  memberId    String
-  member      Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  note        String?
-  checkedIn   Boolean   @default(false)
-  checkedInAt DateTime?
-  createdAt   DateTime  @default(now())
+  id                String    @id @default(cuid())
+  activityId        String
+  activity          Activity  @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  memberId          String?
+  member            Member?   @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  registrantName    String    @default("")
+  registrantEmail   String    @default("")
+  registrantPhone   String    @default("")
+  registrantLineId  String?
+  note              String?
+  checkedIn         Boolean   @default(false)
+  checkedInAt       DateTime?
+  createdAt         DateTime  @default(now())
 
+  // NULL != NULL in PostgreSQL unique indexes, so multiple guest rows (memberId=NULL) are allowed
   @@unique([activityId, memberId])
   @@index([activityId])
   @@index([memberId])
