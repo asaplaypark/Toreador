@@ -13,8 +13,15 @@ const prompt = Prompt({
 });
 
 export const metadata: Metadata = {
-  title: "TOREADOR — สมาคมศิษย์เก่าสถาปัตย์ จุฬาฯ",
-  description: "ระบบสมาชิกสมาคมศิษย์เก่าคณะสถาปัตยกรรมศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย",
+  title: "TOREADOR CLUB — สมาคมนิสิตเก่า สถาปัตย์ จุฬาฯ",
+  description: "สมาคมนิสิตเก่า คณะสถาปัตยกรรมศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย",
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
