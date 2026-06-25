@@ -5,6 +5,8 @@ import { memberRegistrationHtml } from "@/lib/email/templates/memberRegistration
 import { memberApprovedHtml } from "@/lib/email/templates/memberApproved";
 import { activityRegistrationHtml } from "@/lib/email/templates/activityRegistration";
 import { activityCancellationHtml } from "@/lib/email/templates/activityCancellation";
+import { donationReceivedHtml } from "@/lib/email/templates/donationReceived";
+import { donationConfirmedHtml } from "@/lib/email/templates/donationConfirmed";
 import { sendEmail } from "@/lib/email/resend";
 
 const ALLOWED = ["ADMIN", "SUPER_ADMIN"];
@@ -45,6 +47,16 @@ const MOCK = {
         activityTitle: "งานรวมรุ่นสถาปัตย์ประจำปี 2568",
         activityDate: "15 มกราคม 2568",
       }),
+  },
+  donationReceived: {
+    subject: "ขอบคุณสำหรับการบริจาค — กองทุนกตัญญูครูสถา",
+    html: () =>
+      donationReceivedHtml({ donorName: "สมชาย ใจดี", email: "test@example.com", fund: "KATANYU", amount: 1000 }),
+  },
+  donationConfirmed: {
+    subject: "ยืนยันการบริจาค — กองทุนสถาอาทร",
+    html: () =>
+      donationConfirmedHtml({ donorName: "สมชาย ใจดี", email: "test@example.com", fund: "STACARE", amount: 500 }),
   },
 } satisfies Record<string, { subject: string; html: () => Promise<string> }>;
 

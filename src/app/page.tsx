@@ -6,7 +6,7 @@ import { sanitizeHtml } from "@/lib/sanitize";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, BookOpen, CalendarDays, MapPin } from "lucide-react";
+import { Users, BookOpen, CalendarDays, MapPin, Heart } from "lucide-react";
 
 export default async function LandingPage() {
   const [settings, session, memberCount, distinctGens, latestNews] =
@@ -310,6 +310,61 @@ export default async function LandingPage() {
           </div>
         </section>
       )}
+      {/* ── Donation Funds ── */}
+      <section className="bg-sepia-dark px-4 py-16">
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-8 text-center">
+            <Heart className="mx-auto mb-3 size-7 text-sepia-pale" />
+            <h2 className="text-2xl font-medium text-white">สนับสนุนกองทุน</h2>
+            <p className="mt-2 text-sm text-sepia-pale">
+              ร่วมสนับสนุนกองทุนเพื่อคณาจารย์ นิสิต และสมาชิกสมาคมฯ
+            </p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {[
+              {
+                id: "KATANYU",
+                name: "กองทุนกตัญญูครูสถา",
+                desc: "สนับสนุนคณาจารย์และบุคลากรคณะสถาปัตยกรรมศาสตร์",
+                account: "052-0-62345-2",
+              },
+              {
+                id: "STACARE",
+                name: "กองทุนสถาอาทร",
+                desc: "ช่วยเหลือนิสิตและศิษย์เก่าในยามที่ต้องการ",
+                account: "052-0-68064-2",
+              },
+            ].map((fund) => (
+              <div
+                key={fund.id}
+                className="rounded-xl border border-white/10 bg-white/5 p-6 text-white"
+              >
+                <h3 className="font-semibold text-lg">{fund.name}</h3>
+                <p className="mt-1 text-sm text-sepia-pale">{fund.desc}</p>
+                <p className="mt-3 font-mono text-sepia-pale/80 text-sm tracking-widest">{fund.account}</p>
+                <Link href={`/donate?fund=${fund.id}#form`} className="mt-4 block">
+                  <Button
+                    className="w-full gap-2 border border-white/20 bg-white/10 text-white hover:bg-white/20"
+                    variant="outline"
+                  >
+                    <Heart className="size-4" />
+                    บริจาคเพื่อกองทุนนี้
+                  </Button>
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 text-center">
+            <Link href="/donate">
+              <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                ดูรายละเอียดและ QR Code
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

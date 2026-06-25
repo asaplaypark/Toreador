@@ -316,6 +316,7 @@ model Donation {
   memberId      String?
   member        Member?        @relation(fields: [memberId], references: [id])
   donorName     String
+  donorEmail    String?
   donorPhone    String?
   fund          DonationFund
   amount        Decimal        @db.Decimal(10, 2)

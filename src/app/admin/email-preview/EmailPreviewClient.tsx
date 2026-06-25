@@ -8,6 +8,8 @@ const TEMPLATES = [
   { id: "memberApproved", label: "อนุมัติสมาชิก" },
   { id: "activityRegistration", label: "ลงทะเบียนกิจกรรม (ยืนยัน)" },
   { id: "activityCancellation", label: "ยกเลิกกิจกรรม" },
+  { id: "donationReceived", label: "บริจาค (ยืนยันรับสลิป)" },
+  { id: "donationConfirmed", label: "บริจาค (ยืนยันการบริจาค)" },
 ];
 
 export default function EmailPreviewClient() {

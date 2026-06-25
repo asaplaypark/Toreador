@@ -42,6 +42,7 @@ export default function MobileMenu({ isLoggedIn, role }: Props) {
         >
           <Link href="/news" className={linkClass}>ข่าวสาร</Link>
           <Link href="/activities" className={linkClass}>กิจกรรม</Link>
+          <Link href="/donate" className={linkClass}>บริจาค</Link>
           <Link href="/members" className={linkClass}>ทำเนียบสมาชิก</Link>
 
           {isLoggedIn ? (

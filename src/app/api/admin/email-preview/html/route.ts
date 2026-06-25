@@ -5,6 +5,8 @@ import { memberRegistrationHtml } from "@/lib/email/templates/memberRegistration
 import { memberApprovedHtml } from "@/lib/email/templates/memberApproved";
 import { activityRegistrationHtml } from "@/lib/email/templates/activityRegistration";
 import { activityCancellationHtml } from "@/lib/email/templates/activityCancellation";
+import { donationReceivedHtml } from "@/lib/email/templates/donationReceived";
+import { donationConfirmedHtml } from "@/lib/email/templates/donationConfirmed";
 import { getEmailSettings } from "@/lib/site-settings";
 
 const ALLOWED = ["ADMIN", "SUPER_ADMIN"];
@@ -52,6 +54,18 @@ export async function GET(req: Request) {
           activityTitle: "งานรวมรุ่นสถาปัตย์ประจำปี 2568",
           activityDate: "15 มกราคม 2568",
         },
+        es
+      );
+      break;
+    case "donationReceived":
+      html = await donationReceivedHtml(
+        { donorName: "สมชาย ใจดี", email: "test@example.com", fund: "KATANYU", amount: 1000 },
+        es
+      );
+      break;
+    case "donationConfirmed":
+      html = await donationConfirmedHtml(
+        { donorName: "สมชาย ใจดี", email: "test@example.com", fund: "STACARE", amount: 500 },
         es
       );
       break;

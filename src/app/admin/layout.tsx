@@ -52,6 +52,12 @@ export default async function AdminLayout({
             การตั้งค่า
           </Link>
           <Link
+            href="/admin/donations"
+            className="rounded px-3 py-1 text-xs font-medium text-sepia transition-colors hover:bg-sepia-pale/40"
+          >
+            บริจาค
+          </Link>
+          <Link
             href="/admin/email-preview"
             className="rounded px-3 py-1 text-xs font-medium text-sepia transition-colors hover:bg-sepia-pale/40"
           >

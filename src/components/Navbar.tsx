@@ -38,6 +38,7 @@ export default async function Navbar() {
         <nav className="hidden items-center gap-1 sm:flex sm:gap-2">
           <Link href="/news" className="navbar-link">ข่าวสาร</Link>
           <Link href="/activities" className="navbar-link">กิจกรรม</Link>
+          <Link href="/donate" className="navbar-link">บริจาค</Link>
           <Link href="/members" className="navbar-link">ทำเนียบสมาชิก</Link>
 
           {session?.user ? (

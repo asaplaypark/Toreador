@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-export type UploadBucket = "avatars" | "news-covers";
+export type UploadBucket = "avatars" | "news-covers" | "donation-slips";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -48,4 +48,41 @@ export async function deleteFile(bucket: UploadBucket, path: string): Promise<vo
 /** Extract the relative file path from a Supabase public URL. */
 export function pathFromPublicUrl(url: string): string {
   return url.split("/").pop() ?? "";
+}
+
+// ─── Donation slips (private bucket) ────────────────────────────────────────
+
+export async function ensureDonationSlipsBucket(): Promise<void> {
+  const { error } = await supabase.storage.createBucket("donation-slips", {
+    public: false,
+    fileSizeLimit: 5 * 1024 * 1024,
+    allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+  });
+  // Ignore "already exists" error
+  if (error && !error.message.includes("already exists")) {
+    console.error("ensureDonationSlipsBucket:", error.message);
+  }
+}
+
+export async function uploadDonationSlip(file: File, donationId: string): Promise<string> {
+  await ensureDonationSlipsBucket();
+  const ext = getExt(file.name);
+  const path = `${donationId}-${Date.now()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from("donation-slips")
+    .upload(path, file, { contentType: file.type });
+
+  if (error) throw new Error(`Slip upload failed: ${error.message}`);
+  return path;
+}
+
+/** Returns a signed URL valid for 1 hour so admins can view the slip. */
+export async function getDonationSlipUrl(path: string): Promise<string> {
+  const { data, error } = await supabase.storage
+    .from("donation-slips")
+    .createSignedUrl(path, 3600);
+
+  if (error || !data) throw new Error(`Cannot get signed URL: ${error?.message}`);
+  return data.signedUrl;
 }
