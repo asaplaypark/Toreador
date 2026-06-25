@@ -58,6 +58,12 @@ export default async function AdminLayout({
             บริจาค
           </Link>
           <Link
+            href="/admin/analytics"
+            className="rounded px-3 py-1 text-xs font-medium text-sepia transition-colors hover:bg-sepia-pale/40"
+          >
+            วิเคราะห์
+          </Link>
+          <Link
             href="/admin/import"
             className="rounded px-3 py-1 text-xs font-medium text-sepia transition-colors hover:bg-sepia-pale/40"
           >
