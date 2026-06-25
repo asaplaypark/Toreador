@@ -9,9 +9,10 @@ import { Menu, X } from "lucide-react";
 type Props = {
   isLoggedIn: boolean;
   role?: string;
+  memberId?: string;
 };
 
-export default function MobileMenu({ isLoggedIn, role }: Props) {
+export default function MobileMenu({ isLoggedIn, role, memberId }: Props) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
@@ -49,6 +50,10 @@ export default function MobileMenu({ isLoggedIn, role }: Props) {
             <>
               <div className={dividerClass} />
               <Link href="/dashboard" className={linkClass}>แดชบอร์ด</Link>
+              {memberId && (
+                <Link href={`/members/${memberId}`} className={linkClass}>โปรไฟล์ของฉัน</Link>
+              )}
+              <Link href="/profile/edit" className={linkClass}>แก้ไขโปรไฟล์</Link>
               {isAdmin && (
                 <Link href="/admin" className={linkClass}>จัดการระบบ</Link>
               )}

@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getDeptLabel, getGeneration } from "@/lib/departments";
 import AvatarUpload from "@/components/AvatarUpload";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -57,6 +59,14 @@ export default async function DashboardPage() {
               <p className="mt-1 text-sm text-sepia-mid">
                 {dept} · รุ่นที่ {gen}
               </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button asChild size="sm" variant="outline">
+                  <Link href="/profile/edit">แก้ไขโปรไฟล์</Link>
+                </Button>
+                <Button asChild size="sm" variant="ghost">
+                  <Link href={`/members/${member.id}`}>ดูโปรไฟล์</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>

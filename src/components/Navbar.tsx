@@ -3,8 +3,10 @@ import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getSetting } from "@/lib/site-settings";
-import LogoutButton from "./LogoutButton";
+import { prisma } from "@/lib/prisma";
 import MobileMenu from "./MobileMenu";
+import NavUserMenu from "./NavUserMenu";
+import LogoutButton from "./LogoutButton";
 
 export default async function Navbar() {
   const [session, siteName] = await Promise.all([
@@ -13,6 +15,20 @@ export default async function Navbar() {
   ]);
   const isAdmin =
     session?.user?.role === "ADMIN" || session?.user?.role === "SUPER_ADMIN";
+
+  let memberInfo: { id: string; firstNameTh: string; nickname: string | null } | null = null;
+  if (session?.user?.id) {
+    memberInfo = await prisma.member.findUnique({
+      where: { userId: session.user.id, deletedAt: null },
+      select: { id: true, firstNameTh: true, nickname: true },
+    });
+  }
+
+  const displayName = memberInfo
+    ? memberInfo.nickname
+      ? `${memberInfo.firstNameTh} (${memberInfo.nickname})`
+      : memberInfo.firstNameTh
+    : (session?.user?.email ?? "");
 
   return (
     <header className="navbar-root sticky top-0 z-50 w-full shadow-sm">
@@ -47,9 +63,13 @@ export default async function Navbar() {
               {isAdmin && (
                 <Link href="/admin" className="navbar-link">จัดการระบบ</Link>
               )}
-              <div className="ml-1">
-                <LogoutButton />
-              </div>
+              {memberInfo ? (
+                <NavUserMenu displayName={displayName} memberId={memberInfo.id} />
+              ) : (
+                <div className="ml-1">
+                  <LogoutButton />
+                </div>
+              )}
             </>
           ) : (
             <Link href="/login" className="navbar-cta">เข้าสู่ระบบ</Link>
@@ -60,6 +80,7 @@ export default async function Navbar() {
         <MobileMenu
           isLoggedIn={!!session?.user}
           role={session?.user?.role}
+          memberId={memberInfo?.id}
         />
       </div>
     </header>

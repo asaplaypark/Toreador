@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { MemberStatus } from "@prisma/client";
 import Link from "next/link";
-import { ArrowLeft, Briefcase, Building2, Globe, MessageCircle, Phone } from "lucide-react";
+import { ArrowLeft, Briefcase, Building2, Globe, MessageCircle, Pencil, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Avatar from "@/components/Avatar";
 
@@ -28,6 +28,15 @@ export default async function MemberDetailPage({
   }
 
   const { id } = await params;
+
+  // Check if this is the viewer's own profile
+  const ownMember = session?.user?.id
+    ? await prisma.member.findUnique({
+        where: { userId: session.user.id, deletedAt: null },
+        select: { id: true },
+      })
+    : null;
+  const isOwnProfile = ownMember?.id === id;
 
   const member = await prisma.member.findUnique({
     where: { id, status: MemberStatus.ACTIVE, deletedAt: null },
@@ -63,13 +72,23 @@ export default async function MemberDetailPage({
   return (
     <div className="flex-1 bg-sepia-bg px-4 py-10">
       <div className="mx-auto max-w-2xl space-y-6">
-        {/* Back */}
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/members">
-            <ArrowLeft className="size-4 mr-1" />
-            กลับไปทำเนียบสมาชิก
-          </Link>
-        </Button>
+        {/* Back + edit */}
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/members">
+              <ArrowLeft className="size-4 mr-1" />
+              กลับไปทำเนียบสมาชิก
+            </Link>
+          </Button>
+          {isOwnProfile && (
+            <Button size="sm" variant="outline" asChild>
+              <Link href="/profile/edit">
+                <Pencil className="size-3.5 mr-1.5" />
+                แก้ไขโปรไฟล์
+              </Link>
+            </Button>
+          )}
+        </div>
 
         {/* Profile header */}
         <Card>
