@@ -6,6 +6,7 @@ export const DEPARTMENT_LABELS: Record<string, string> = {
   URBAN_PLANNING: "การวางแผนภาคและผังเมือง",
   COMMDE: "CommDe",
   INDA: "INDA",
+  THAI_ARCHITECTURE: "สถาปัตยกรรมไทย",
 };
 
 export const DEPARTMENT_OPTIONS = Object.entries(DEPARTMENT_LABELS).map(
