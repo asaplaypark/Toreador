@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DonationStatusFilter from "./DonationStatusFilter";
+import Pagination from "@/components/Pagination";
+
+const PER_PAGE = 25;
 
 const FUND_LABELS: Record<DonationFund, string> = {
   KATANYU: "กตัญญูครูสถา",
@@ -22,14 +25,15 @@ function StatusBadge({ status }: { status: DonationStatus }) {
   return <Badge variant="outline" className="border-amber-400 text-amber-700">รอยืนยัน</Badge>;
 }
 
-type SearchParams = { fund?: string; status?: string };
+type SearchParams = { fund?: string; status?: string; page?: string };
 
 export default async function AdminDonationsPage({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const { fund, status } = await searchParams;
+  const { fund, status, page: pageStr } = await searchParams;
+  const page = Math.max(1, parseInt(pageStr ?? "1", 10) || 1);
 
   const where: Prisma.DonationWhereInput = {
     deletedAt: null,
@@ -41,10 +45,13 @@ export default async function AdminDonationsPage({
       : {}),
   };
 
-  const [donations, totals] = await Promise.all([
+  const [total, donations, totals] = await Promise.all([
+    prisma.donation.count({ where }),
     prisma.donation.findMany({
       where,
       orderBy: { createdAt: "desc" },
+      skip: (page - 1) * PER_PAGE,
+      take: PER_PAGE,
       select: {
         id: true,
         donorName: true,
@@ -62,16 +69,26 @@ export default async function AdminDonationsPage({
     }),
   ]);
 
+  const totalPages = Math.ceil(total / PER_PAGE);
+  const from = total === 0 ? 0 : (page - 1) * PER_PAGE + 1;
+  const to = Math.min(page * PER_PAGE, total);
+
   const totalMap = Object.fromEntries(
     totals.map((t) => [t.fund, Number(t._sum.amount ?? 0)])
   );
+
+  const paginationParams: Record<string, string> = {};
+  if (fund) paginationParams.fund = fund;
+  if (status) paginationParams.status = status;
 
   return (
     <div className="flex-1 bg-sepia-bg px-4 py-6 sm:py-10">
       <div className="mx-auto max-w-6xl space-y-6">
         <div>
           <h1 className="text-2xl font-medium text-charcoal">จัดการบริจาค</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{donations.length} รายการ</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {total === 0 ? "ไม่พบรายการ" : `แสดง ${from}–${to} จาก ${total} รายการ`}
+          </p>
         </div>
 
         {/* Totals */}
@@ -143,6 +160,13 @@ export default async function AdminDonationsPage({
             </table>
           )}
         </div>
+
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          basePath="/admin/donations"
+          searchParams={paginationParams}
+        />
       </div>
     </div>
   );

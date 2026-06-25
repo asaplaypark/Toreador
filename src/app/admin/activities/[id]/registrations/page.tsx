@@ -1,18 +1,24 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import RegistrationsClient from "./RegistrationsClient";
 import { DEPARTMENT_LABELS, getGeneration } from "@/lib/departments";
+import Pagination from "@/components/Pagination";
+
+const PER_PAGE = 25;
 
 export default async function RegistrationsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { id } = await params;
+  const { page: pageStr } = await searchParams;
+  const page = Math.max(1, parseInt(pageStr ?? "1", 10) || 1);
 
   const activity = await prisma.activity.findUnique({
     where: { id, deletedAt: null },
@@ -20,21 +26,28 @@ export default async function RegistrationsPage({
   });
   if (!activity) notFound();
 
-  const registrations = await prisma.activityRegistration.findMany({
-    where: { activityId: id },
-    include: {
-      member: {
-        select: {
-          firstNameTh: true,
-          lastNameTh: true,
-          department: true,
-          yearOfEntry: true,
-          user: { select: { email: true, phoneNumber: true } },
+  const [total, registrations] = await Promise.all([
+    prisma.activityRegistration.count({ where: { activityId: id } }),
+    prisma.activityRegistration.findMany({
+      where: { activityId: id },
+      include: {
+        member: {
+          select: {
+            firstNameTh: true,
+            lastNameTh: true,
+            department: true,
+            yearOfEntry: true,
+            user: { select: { email: true, phoneNumber: true } },
+          },
         },
       },
-    },
-    orderBy: { createdAt: "asc" },
-  });
+      orderBy: { createdAt: "asc" },
+      skip: (page - 1) * PER_PAGE,
+      take: PER_PAGE,
+    }),
+  ]);
+
+  const totalPages = Math.ceil(total / PER_PAGE);
 
   const rows = registrations.map((r) => ({
     id: r.id,
@@ -66,14 +79,26 @@ export default async function RegistrationsPage({
             <div>
               <h1 className="text-xl font-medium text-charcoal">{activity.title}</h1>
               <p className="text-sm text-muted-foreground">
-                ผู้จอง {rows.length}
+                ผู้จอง {total}
                 {activity.maxSeats ? ` / ${activity.maxSeats} ที่นั่ง` : " คน"}
+                {totalPages > 1 && (
+                  <span className="ml-1">
+                    — หน้า {page}/{totalPages}
+                  </span>
+                )}
               </p>
             </div>
           </div>
         </div>
 
         <RegistrationsClient rows={rows} activityTitle={activity.title} />
+
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          basePath={`/admin/activities/${id}/registrations`}
+          searchParams={{}}
+        />
       </div>
     </div>
   );

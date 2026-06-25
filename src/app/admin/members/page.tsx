@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import MemberStatusActions from "./MemberStatusActions";
 import MemberStatusFilter from "./MemberStatusFilter";
+import Pagination from "@/components/Pagination";
+
+const PER_PAGE = 25;
 
 const STATUS_LABELS: Record<MemberStatus, string> = {
   PENDING: "รอการอนุมัติ",
@@ -20,7 +23,6 @@ function StatusBadge({ status }: { status: MemberStatus }) {
     return <Badge variant="destructive">{STATUS_LABELS[status]}</Badge>;
   if (status === MemberStatus.INACTIVE)
     return <Badge variant="outline">{STATUS_LABELS[status]}</Badge>;
-  // PENDING
   return (
     <Badge variant="outline" className="border-amber-400 text-amber-700">
       {STATUS_LABELS[status]}
@@ -28,14 +30,15 @@ function StatusBadge({ status }: { status: MemberStatus }) {
   );
 }
 
-type SearchParams = { status?: string };
+type SearchParams = { status?: string; page?: string };
 
 export default async function AdminMembersPage({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const { status } = await searchParams;
+  const { status, page: pageStr } = await searchParams;
+  const page = Math.max(1, parseInt(pageStr ?? "1", 10) || 1);
 
   const where: Prisma.MemberWhereInput = {
     deletedAt: null,
@@ -44,18 +47,32 @@ export default async function AdminMembersPage({
       : {}),
   };
 
-  const members = await prisma.member.findMany({
-    where,
-    include: { user: { select: { email: true } } },
-    orderBy: { createdAt: "desc" },
-  });
+  const [total, members] = await Promise.all([
+    prisma.member.count({ where }),
+    prisma.member.findMany({
+      where,
+      include: { user: { select: { email: true } } },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * PER_PAGE,
+      take: PER_PAGE,
+    }),
+  ]);
+
+  const totalPages = Math.ceil(total / PER_PAGE);
+  const from = total === 0 ? 0 : (page - 1) * PER_PAGE + 1;
+  const to = Math.min(page * PER_PAGE, total);
+
+  const paginationParams: Record<string, string> = {};
+  if (status) paginationParams.status = status;
 
   return (
     <div className="flex-1 bg-sepia-bg px-4 py-6 sm:py-10">
       <div className="mx-auto max-w-6xl space-y-6">
         <div>
           <h1 className="text-2xl font-medium text-charcoal">จัดการสมาชิก</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{members.length} รายการ</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {total === 0 ? "ไม่พบข้อมูล" : `แสดง ${from}–${to} จาก ${total} รายการ`}
+          </p>
         </div>
 
         <MemberStatusFilter current={status ?? ""} />
@@ -115,6 +132,13 @@ export default async function AdminMembersPage({
             </table>
           )}
         </div>
+
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          basePath="/admin/members"
+          searchParams={paginationParams}
+        />
       </div>
     </div>
   );
