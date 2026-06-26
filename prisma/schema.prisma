@@ -41,6 +41,7 @@ enum Department {
   COMMDE
   INDA
   THAI_ARCHITECTURE
+  GRADUATE
 }
 
 enum DataSource {

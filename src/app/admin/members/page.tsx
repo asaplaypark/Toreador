@@ -4,7 +4,8 @@ import { getDeptLabel, getGeneration } from "@/lib/departments";
 import { calculateAge, isAgeValid } from "@/lib/age";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { TriangleAlert } from "lucide-react";
+import { Eye, TriangleAlert } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import MemberStatusActions from "./MemberStatusActions";
 import MemberStatusFilter from "./MemberStatusFilter";
 import Pagination from "@/components/Pagination";
@@ -145,10 +146,23 @@ export default async function AdminMembersPage({
                       <StatusBadge status={member.status} />
                     </td>
                     <td className="px-4 py-3">
-                      <MemberStatusActions
-                        memberId={member.id}
-                        currentStatus={member.status}
-                      />
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          asChild
+                          size="sm"
+                          variant={member.status === "PENDING" ? "default" : "ghost"}
+                          className={member.status === "PENDING" ? "bg-sepia hover:bg-sepia/90 text-white" : ""}
+                        >
+                          <Link href={`/admin/members/${member.id}`}>
+                            <Eye className="size-3.5 mr-1" />
+                            ดูรายละเอียด
+                          </Link>
+                        </Button>
+                        <MemberStatusActions
+                          memberId={member.id}
+                          currentStatus={member.status}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}

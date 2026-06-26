@@ -8,6 +8,7 @@ export const DEPT_KEYWORD_MAP: Record<string, string[]> = {
   COMMDE: ["commde"],
   INDA: ["inda"],
   THAI_ARCHITECTURE: ["สถท", "สถ.ท.", "สถาปัตยกรรมไทย", "thai architecture"],
+  GRADUATE: ["ป.โท", "ปริญญาโท", "graduate", "master", "masters"],
 };
 
 export function mapDepartment(raw: string): string | null {

@@ -7,6 +7,7 @@ export const DEPARTMENT_LABELS: Record<string, string> = {
   COMMDE: "CommDe",
   INDA: "INDA",
   THAI_ARCHITECTURE: "สถาปัตยกรรมไทย",
+  GRADUATE: "นิสิตเก่าปริญญาโท",
 };
 
 export const DEPARTMENT_OPTIONS = Object.entries(DEPARTMENT_LABELS).map(

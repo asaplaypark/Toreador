@@ -6,9 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { ArrowLeft, TriangleAlert } from "lucide-react";
+import { ArrowLeft, Pencil, TriangleAlert } from "lucide-react";
 import MemberStatusActions from "../MemberStatusActions";
 import { MemberStatus } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const STATUS_LABELS: Record<MemberStatus, string> = {
   PENDING: "รอการอนุมัติ",
@@ -23,6 +25,8 @@ export default async function AdminMemberDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const session = await getServerSession(authOptions);
+  const sessionRole = session?.user?.role as string | undefined;
 
   const member = await prisma.member.findUnique({
     where: { id, deletedAt: null },
@@ -52,6 +56,14 @@ export default async function AdminMemberDetailPage({
           <h1 className="flex-1 text-xl font-medium text-charcoal">
             {member.firstNameTh} {member.lastNameTh}
           </h1>
+          {(sessionRole === "ADMIN" || sessionRole === "SUPER_ADMIN") && (
+            <Button size="sm" variant="outline" asChild>
+              <Link href={`/admin/members/${id}/edit`}>
+                <Pencil className="mr-1.5 size-3.5" />
+                แก้ไขข้อมูล
+              </Link>
+            </Button>
+          )}
           <Badge
             variant={
               member.status === MemberStatus.REJECTED ? "destructive" : "outline"
