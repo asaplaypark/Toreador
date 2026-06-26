@@ -1,13 +1,14 @@
 import { prisma } from "@/lib/prisma";
-import { MemberStatus, Prisma } from "@prisma/client";
+import { Department, MemberStatus, Prisma } from "@prisma/client";
 import { getDeptLabel, getGeneration } from "@/lib/departments";
 import { calculateAge, isAgeValid } from "@/lib/age";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Eye, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Suspense } from "react";
 import MemberStatusActions from "./MemberStatusActions";
-import MemberStatusFilter from "./MemberStatusFilter";
+import AdminMemberFilters from "./AdminMemberFilters";
 import Pagination from "@/components/Pagination";
 
 const PER_PAGE = 25;
@@ -33,20 +34,43 @@ function StatusBadge({ status }: { status: MemberStatus }) {
   );
 }
 
-type SearchParams = { status?: string; page?: string };
+type SearchParams = {
+  status?: string;
+  search?: string;
+  department?: string;
+  studio?: string;
+  page?: string;
+};
 
 export default async function AdminMembersPage({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const { status, page: pageStr } = await searchParams;
+  const { status, search: searchRaw, department, studio, page: pageStr } = await searchParams;
   const page = Math.max(1, parseInt(pageStr ?? "1", 10) || 1);
+  const search = searchRaw?.trim() ?? "";
+  const yearOfEntry = studio ? 2475 + parseInt(studio, 10) : undefined;
 
   const where: Prisma.MemberWhereInput = {
     deletedAt: null,
     ...(status && (Object.values(MemberStatus) as string[]).includes(status)
       ? { status: status as MemberStatus }
+      : {}),
+    ...(department && (Object.values(Department) as string[]).includes(department)
+      ? { department: department as Department }
+      : {}),
+    ...(yearOfEntry ? { yearOfEntry } : {}),
+    ...(search
+      ? {
+          OR: [
+            { firstNameTh: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { lastNameTh: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { nickname: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { phone: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { user: { email: { contains: search, mode: Prisma.QueryMode.insensitive } } },
+          ],
+        }
       : {}),
   };
 
@@ -67,6 +91,9 @@ export default async function AdminMembersPage({
 
   const paginationParams: Record<string, string> = {};
   if (status) paginationParams.status = status;
+  if (search) paginationParams.search = search;
+  if (department) paginationParams.department = department;
+  if (studio) paginationParams.studio = studio;
 
   return (
     <div className="flex-1 bg-sepia-bg px-4 py-6 sm:py-10">
@@ -78,7 +105,14 @@ export default async function AdminMembersPage({
           </p>
         </div>
 
-        <MemberStatusFilter current={status ?? ""} />
+        <Suspense fallback={null}>
+          <AdminMemberFilters
+            search={search}
+            status={status ?? ""}
+            department={department ?? ""}
+            studio={studio ?? ""}
+          />
+        </Suspense>
 
         <div className="overflow-x-auto rounded-lg border border-sepia-pale/60 bg-white">
           {members.length === 0 ? (
