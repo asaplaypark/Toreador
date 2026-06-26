@@ -74,6 +74,8 @@ export default async function MembersPage({
         firstNameTh: true,
         lastNameTh: true,
         nickname: true,
+        formerFirstName: true,
+        formerLastName: true,
         department: true,
         yearOfEntry: true,
         occupation: true,
@@ -157,9 +159,13 @@ export default async function MembersPage({
               {members.map((member) => {
                 const gen = getGeneration(member.yearOfEntry);
                 const dept = getDeptLabel(member.department);
+                const baseName = `${member.firstNameTh} ${member.lastNameTh}`;
+                const formerPart = (member.formerFirstName || member.formerLastName)
+                  ? ` (เดิม: ${[member.formerFirstName, member.formerLastName].filter(Boolean).join(" ")})`
+                  : "";
                 const fullName = member.nickname
-                  ? `${member.firstNameTh} ${member.lastNameTh} (${member.nickname})`
-                  : `${member.firstNameTh} ${member.lastNameTh}`;
+                  ? `${baseName} (${member.nickname})${formerPart}`
+                  : `${baseName}${formerPart}`;
 
                 const card = (
                   <Card

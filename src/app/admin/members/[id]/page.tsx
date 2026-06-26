@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getDeptLabel, getGeneration } from "@/lib/departments";
+import { calculateAge, isAgeValid } from "@/lib/age";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, TriangleAlert } from "lucide-react";
 import MemberStatusActions from "../MemberStatusActions";
 import { MemberStatus } from "@prisma/client";
 
@@ -34,6 +35,8 @@ export default async function AdminMemberDetailPage({
 
   const gen = getGeneration(member.yearOfEntry);
   const dept = getDeptLabel(member.department);
+  const age = calculateAge(member.birthDate);
+  const ageValid = isAgeValid(age);
 
   return (
     <div className="flex-1 bg-sepia-bg px-4 py-10">
@@ -83,11 +86,34 @@ export default async function AdminMemberDetailPage({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
+            <Row label="วันเกิด">
+              {member.birthDate.toLocaleDateString("th-TH", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </Row>
+            <Row label="อายุ">
+              <span className={ageValid ? undefined : "text-red-600 font-medium"}>
+                {age} ปี
+              </span>
+              {!ageValid && (
+                <span className="ml-2 inline-flex items-center gap-1 text-xs text-red-600">
+                  <TriangleAlert className="size-3.5" />
+                  กรุณาตรวจสอบวันเกิด อาจกรอกสลับ ค.ศ./พ.ศ.
+                </span>
+              )}
+            </Row>
             <Row label="ชื่อ-นามสกุล (ไทย)">
               {member.firstNameTh} {member.lastNameTh}
             </Row>
             {member.nickname && (
               <Row label="ชื่อเล่น">{member.nickname}</Row>
+            )}
+            {(member.formerFirstName || member.formerLastName) && (
+              <Row label="ชื่อเดิม-นามสกุลเดิม">
+                {[member.formerFirstName, member.formerLastName].filter(Boolean).join(" ")}
+              </Row>
             )}
             {member.firstNameEn && (
               <Row label="ชื่อ-นามสกุล (อังกฤษ)">

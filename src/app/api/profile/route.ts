@@ -50,6 +50,8 @@ export async function PATCH(req: Request) {
       firstNameEn: (body.firstNameEn as string | undefined)?.trim() || null,
       lastNameEn: (body.lastNameEn as string | undefined)?.trim() || null,
       nickname: (body.nickname as string | undefined)?.trim() || null,
+      formerFirstName: (body.formerFirstName as string | undefined)?.trim() || null,
+      formerLastName: (body.formerLastName as string | undefined)?.trim() || null,
       phone: (body.phone as string | undefined)?.trim() || null,
       occupation: (body.occupation as string | undefined)?.trim() || null,
       workplace: (body.workplace as string | undefined)?.trim() || null,

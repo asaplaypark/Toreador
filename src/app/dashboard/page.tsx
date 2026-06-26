@@ -21,6 +21,8 @@ export default async function DashboardPage() {
       firstNameTh: true,
       lastNameTh: true,
       nickname: true,
+      formerFirstName: true,
+      formerLastName: true,
       department: true,
       yearOfEntry: true,
       profilePhoto: true,
@@ -53,6 +55,11 @@ export default async function DashboardPage() {
                   <span className="ml-1 text-lg font-normal text-sepia-mid">({member.nickname})</span>
                 )}
               </h1>
+              {(member.formerFirstName || member.formerLastName) && (
+                <p className="text-sm text-muted-foreground">
+                  เดิม: {[member.formerFirstName, member.formerLastName].filter(Boolean).join(" ")}
+                </p>
+              )}
               <p className="mt-0.5 text-sm text-muted-foreground">
                 {session.user?.email}
               </p>

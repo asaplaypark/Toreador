@@ -181,6 +181,8 @@ model Member {
   firstNameEn       String?
   lastNameEn        String?
   nickname          String?
+  formerFirstName   String?
+  formerLastName    String?
   birthDate         DateTime
   department        Department
   yearOfEntry       Int

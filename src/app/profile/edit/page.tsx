@@ -28,6 +28,8 @@ export default async function ProfileEditPage() {
       bio: true,
       lineId: true,
       website: true,
+      formerFirstName: true,
+      formerLastName: true,
       fieldVisibility: true,
     },
   });
@@ -54,6 +56,8 @@ export default async function ProfileEditPage() {
             firstNameEn: member.firstNameEn ?? "",
             lastNameEn: member.lastNameEn ?? "",
             nickname: member.nickname ?? "",
+            formerFirstName: member.formerFirstName ?? "",
+            formerLastName: member.formerLastName ?? "",
             phone: member.phone ?? "",
             occupation: member.occupation ?? "",
             workplace: member.workplace ?? "",

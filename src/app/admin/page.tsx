@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Clock, CheckCircle, Banknote } from "lucide-react";
+import { Users, Clock, CheckCircle, Banknote, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default async function AdminPage() {
   const [total, pending, active, donations] = await Promise.all([
@@ -9,33 +10,6 @@ export default async function AdminPage() {
     prisma.member.count({ where: { status: "ACTIVE", deletedAt: null } }),
     prisma.donation.count({ where: { status: "PENDING", deletedAt: null } }),
   ]);
-
-  const cards = [
-    {
-      title: "สมาชิกทั้งหมด",
-      value: total,
-      Icon: Users,
-      colorClass: "text-sepia",
-    },
-    {
-      title: "รอการอนุมัติ",
-      value: pending,
-      Icon: Clock,
-      colorClass: "text-amber-600",
-    },
-    {
-      title: "สมาชิก ACTIVE",
-      value: active,
-      Icon: CheckCircle,
-      colorClass: "text-green-700",
-    },
-    {
-      title: "บริจาครอยืนยัน",
-      value: donations,
-      Icon: Banknote,
-      colorClass: "text-sepia-mid",
-    },
-  ];
 
   return (
     <div className="flex-1 bg-sepia-bg px-4 py-10">
@@ -46,19 +20,55 @@ export default async function AdminPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {cards.map(({ title, value, Icon, colorClass }) => (
-            <Card key={title}>
+          {/* สมาชิกทั้งหมด — static */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">สมาชิกทั้งหมด</CardTitle>
+              <Users className="size-4 text-sepia" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-semibold text-sepia">{total}</p>
+            </CardContent>
+          </Card>
+
+          {/* รอการอนุมัติ — clickable */}
+          <Link href="/admin/members?status=PENDING" className="group">
+            <Card className="h-full cursor-pointer transition-colors group-hover:border-sepia/50">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {title}
-                </CardTitle>
-                <Icon className={`size-4 ${colorClass}`} />
+                <CardTitle className="text-sm font-medium text-muted-foreground">รอการอนุมัติ</CardTitle>
+                <Clock className="size-4 text-amber-600" />
               </CardHeader>
-              <CardContent>
-                <p className={`text-3xl font-semibold ${colorClass}`}>{value}</p>
+              <CardContent className="flex items-end justify-between">
+                <p className="text-3xl font-semibold text-amber-600">{pending}</p>
+                <ArrowRight className="size-4 text-muted-foreground/40 transition-colors group-hover:text-amber-600" />
               </CardContent>
             </Card>
-          ))}
+          </Link>
+
+          {/* สมาชิก ACTIVE — static */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">สมาชิก ACTIVE</CardTitle>
+              <CheckCircle className="size-4 text-green-700" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-semibold text-green-700">{active}</p>
+            </CardContent>
+          </Card>
+
+          {/* บริจาครอยืนยัน — clickable */}
+          <Link href="/admin/donations?status=PENDING" className="group">
+            <Card className="h-full cursor-pointer transition-colors group-hover:border-sepia/50">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">บริจาครอยืนยัน</CardTitle>
+                <Banknote className="size-4 text-sepia-mid" />
+              </CardHeader>
+              <CardContent className="flex items-end justify-between">
+                <p className="text-3xl font-semibold text-sepia-mid">{donations}</p>
+                <ArrowRight className="size-4 text-muted-foreground/40 transition-colors group-hover:text-sepia-mid" />
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </div>

@@ -40,6 +40,8 @@ type Props = {
     firstNameEn: string;
     lastNameEn: string;
     nickname: string;
+    formerFirstName: string;
+    formerLastName: string;
     phone: string;
     occupation: string;
     workplace: string;
@@ -95,6 +97,8 @@ export default function ProfileEditForm({ memberId, initialData, readOnlyInfo }:
           firstNameEn: form.firstNameEn,
           lastNameEn: form.lastNameEn,
           nickname: form.nickname,
+          formerFirstName: form.formerFirstName,
+          formerLastName: form.formerLastName,
           phone: form.phone,
           occupation: form.occupation,
           workplace: form.workplace,
@@ -177,6 +181,24 @@ export default function ProfileEditForm({ memberId, initialData, readOnlyInfo }:
               value={form.nickname}
               onChange={(e) => set("nickname", e.target.value)}
               placeholder="ไม่บังคับ"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="formerFirstName">ชื่อเดิม (สมัยเรียน)</Label>
+            <Input
+              id="formerFirstName"
+              value={form.formerFirstName}
+              onChange={(e) => set("formerFirstName", e.target.value)}
+              placeholder="ชื่อสมัยเรียน (ถ้าเปลี่ยนแล้ว)"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="formerLastName">นามสกุลเดิม (สมัยเรียน)</Label>
+            <Input
+              id="formerLastName"
+              value={form.formerLastName}
+              onChange={(e) => set("formerLastName", e.target.value)}
+              placeholder="นามสกุลสมัยเรียน (ถ้าเปลี่ยนแล้ว)"
             />
           </div>
         </CardContent>

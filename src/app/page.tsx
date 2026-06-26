@@ -77,9 +77,15 @@ export default async function LandingPage() {
   const aboutTitle = settings.about_title || "เกี่ยวกับสมาคม";
   const aboutContent = settings.about_content || "";
 
+  // Total generations: base 88 at Aug 2568, +1 every August
+  const now = new Date();
+  const currentBuddhistYear = now.getFullYear() + 543;
+  const effectiveYear = now.getMonth() >= 7 ? currentBuddhistYear : currentBuddhistYear - 1;
+  const totalGens = 88 + (effectiveYear - 2568);
+
   const stats = [
-    { label: "สมาชิกทั้งหมด", value: memberCount.toLocaleString(), Icon: Users },
-    { label: "จำนวนรุ่น", value: genCount.toLocaleString(), Icon: BookOpen },
+    { label: "สมาชิกที่ลงทะเบียน", value: memberCount.toLocaleString(), Icon: Users },
+    { label: "รุ่นในระบบ / ทั้งหมด", value: `${genCount}/${totalGens}`, Icon: BookOpen },
     { label: "ปีที่ก่อตั้ง", value: `พ.ศ. ${foundedYear}`, Icon: CalendarDays },
   ];
 
@@ -128,7 +134,7 @@ export default async function LandingPage() {
                   <Button asChild className="bg-sepia-cream text-sepia hover:bg-sepia-pale">
                     <Link href="/dashboard">ไปที่แดชบอร์ด</Link>
                   </Button>
-                  <Button asChild variant="outline" className="border-white/50 text-white hover:bg-white/10">
+                  <Button asChild variant="outline" className="border-white bg-transparent text-white hover:bg-white hover:text-[#3D1F00]">
                     <Link href="/members">ทำเนียบสมาชิก</Link>
                   </Button>
                 </div>
@@ -311,12 +317,15 @@ export default async function LandingPage() {
         </section>
       )}
       {/* ── Donation Funds ── */}
-      <section className="bg-sepia-dark px-4 py-16">
+      <section
+        className="px-4 py-16"
+        style={{ background: "linear-gradient(135deg, #C4783A 0%, #D4A853 100%)" }}
+      >
         <div className="mx-auto max-w-4xl">
           <div className="mb-8 text-center">
-            <Heart className="mx-auto mb-3 size-7 text-sepia-pale" />
+            <Heart className="mx-auto mb-3 size-7 text-white/70" />
             <h2 className="text-2xl font-medium text-white">สนับสนุนกองทุน</h2>
-            <p className="mt-2 text-sm text-sepia-pale">
+            <p className="mt-2 text-sm text-white/85">
               ร่วมสนับสนุนกองทุนเพื่อคณาจารย์ นิสิต และสมาชิกสมาคมฯ
             </p>
           </div>
@@ -338,15 +347,15 @@ export default async function LandingPage() {
             ].map((fund) => (
               <div
                 key={fund.id}
-                className="rounded-xl border border-white/10 bg-white/5 p-6 text-white"
+                className="rounded-xl border border-white/20 bg-white/15 p-6 backdrop-blur-sm"
               >
-                <h3 className="font-semibold text-lg">{fund.name}</h3>
-                <p className="mt-1 text-sm text-sepia-pale">{fund.desc}</p>
-                <p className="mt-3 font-mono text-sepia-pale/80 text-sm tracking-widest">{fund.account}</p>
+                <h3 className="font-semibold text-lg text-white">{fund.name}</h3>
+                <p className="mt-1 text-sm text-white/85">{fund.desc}</p>
+                <p className="mt-3 font-mono text-white/70 text-sm tracking-widest">{fund.account}</p>
                 <Link href={`/donate?fund=${fund.id}#form`} className="mt-4 block">
                   <Button
-                    className="w-full gap-2 border border-white/20 bg-white/10 text-white hover:bg-white/20"
-                    variant="outline"
+                    className="w-full gap-2 border-0 text-[#F5E6D3] hover:text-[#F5E6D3]/80"
+                    style={{ backgroundColor: "#3D1F00" }}
                   >
                     <Heart className="size-4" />
                     บริจาคเพื่อกองทุนนี้
@@ -358,7 +367,7 @@ export default async function LandingPage() {
 
           <div className="mt-6 text-center">
             <Link href="/donate">
-              <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
+              <Button variant="outline" className="border-white bg-transparent text-white hover:bg-white hover:text-[#3D1F00]">
                 ดูรายละเอียดและ QR Code
               </Button>
             </Link>

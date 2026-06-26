@@ -30,6 +30,8 @@ type FormState = {
   firstNameEn: string;
   lastNameEn: string;
   nickname: string;
+  formerFirstName: string;
+  formerLastName: string;
   birthDate: string;
   department: string;
   yearOfEntry: string;
@@ -49,6 +51,8 @@ const INITIAL: FormState = {
   firstNameEn: "",
   lastNameEn: "",
   nickname: "",
+  formerFirstName: "",
+  formerLastName: "",
   birthDate: "",
   department: "",
   yearOfEntry: "",
@@ -129,7 +133,7 @@ export default function MemberRegisterForm() {
         <CardHeader>
           <CardTitle>ข้อมูลชื่อ</CardTitle>
           <CardDescription>
-            ชื่อและนามสกุลที่ใช้ในทะเบียนนักศึกษา
+            ชื่อและนามสกุล ไทย-อังกฤษ (ถ้าหากมีการเปลี่ยนชื่อหรือนามสกุล โปรดให้ข้อมูลชื่อนามสกุลเดิมสมัยเรียน)
           </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -182,6 +186,24 @@ export default function MemberRegisterForm() {
               value={form.nickname}
               onChange={(e) => set("nickname", e.target.value)}
               placeholder="เช่น แบงค์, นุ่น, โบ๊ท"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="formerFirstName">ชื่อเดิม (สมัยเรียน)</Label>
+            <Input
+              id="formerFirstName"
+              value={form.formerFirstName}
+              onChange={(e) => set("formerFirstName", e.target.value)}
+              placeholder="ชื่อสมัยเรียน (ถ้าเปลี่ยนแล้ว)"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="formerLastName">นามสกุลเดิม (สมัยเรียน)</Label>
+            <Input
+              id="formerLastName"
+              value={form.formerLastName}
+              onChange={(e) => set("formerLastName", e.target.value)}
+              placeholder="นามสกุลสมัยเรียน (ถ้าเปลี่ยนแล้ว)"
             />
           </div>
         </CardContent>

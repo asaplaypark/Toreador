@@ -1,8 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { MemberStatus, Prisma } from "@prisma/client";
 import { getDeptLabel, getGeneration } from "@/lib/departments";
+import { calculateAge, isAgeValid } from "@/lib/age";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { TriangleAlert } from "lucide-react";
 import MemberStatusActions from "./MemberStatusActions";
 import MemberStatusFilter from "./MemberStatusFilter";
 import Pagination from "@/components/Pagination";
@@ -90,6 +92,9 @@ export default async function AdminMembersPage({
                   <th className="hidden px-4 py-3 text-left font-medium text-sepia-mid sm:table-cell">
                     ภาควิชา / รุ่น
                   </th>
+                  <th className="hidden px-4 py-3 text-left font-medium text-sepia-mid lg:table-cell">
+                    อายุ
+                  </th>
                   <th className="hidden px-4 py-3 text-left font-medium text-sepia-mid md:table-cell">
                     อีเมล
                   </th>
@@ -109,10 +114,29 @@ export default async function AdminMembersPage({
                         {member.nickname && (
                           <span className="ml-1 font-normal text-muted-foreground">({member.nickname})</span>
                         )}
+                        {(member.formerFirstName || member.formerLastName) && (
+                          <span className="ml-1 font-normal text-muted-foreground text-xs">
+                            เดิม: {[member.formerFirstName, member.formerLastName].filter(Boolean).join(" ")}
+                          </span>
+                        )}
                       </Link>
                     </td>
                     <td className="hidden px-4 py-3 text-muted-foreground sm:table-cell">
                       {getDeptLabel(member.department)} · รุ่น {getGeneration(member.yearOfEntry)}
+                    </td>
+                    <td className="hidden px-4 py-3 lg:table-cell">
+                      {(() => {
+                        const age = calculateAge(member.birthDate);
+                        const valid = isAgeValid(age);
+                        return valid ? (
+                          <span className="text-muted-foreground">{age}</span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-red-600 font-medium">
+                            <TriangleAlert className="size-3.5 shrink-0" />
+                            {age}
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                       {member.user.email ?? "—"}
