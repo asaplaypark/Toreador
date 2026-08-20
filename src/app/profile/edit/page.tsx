@@ -5,7 +5,12 @@ import { prisma } from "@/lib/prisma";
 import { getDeptLabel, getGeneration } from "@/lib/departments";
 import ProfileEditForm from "./ProfileEditForm";
 
-export default async function ProfileEditPage() {
+export default async function ProfileEditPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ linked?: string; error?: string }>;
+}) {
+  const { linked, error } = await searchParams;
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/login?callbackUrl=/profile/edit");
 
@@ -54,6 +59,16 @@ export default async function ProfileEditPage() {
             อัปเดตข้อมูลส่วนตัวและการตั้งค่าความเป็นส่วนตัว
           </p>
         </div>
+        {linked === "1" && (
+          <div className="mb-4 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+            เชื่อมต่อบัญชี LINE เรียบร้อยแล้ว
+          </div>
+        )}
+        {error && (
+          <div className="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+            ไม่สามารถเชื่อมต่อ LINE ได้ กรุณาลองใหม่อีกครั้ง
+          </div>
+        )}
         <ProfileEditForm
           memberId={member.id}
           lineConnected={!!userInfo?.lineUserId}
