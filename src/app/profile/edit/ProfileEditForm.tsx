@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import AvatarUpload from "@/components/AvatarUpload";
+import LineIcon from "@/components/LineIcon";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +36,8 @@ const VISIBILITY_FIELDS: { key: string; label: string }[] = [
 
 type Props = {
   memberId: string;
+  lineConnected: boolean;
+  lineDisplayName: string | null;
   initialData: {
     firstNameTh: string;
     lastNameTh: string;
@@ -58,7 +62,7 @@ type Props = {
   };
 };
 
-export default function ProfileEditForm({ memberId, initialData, readOnlyInfo }: Props) {
+export default function ProfileEditForm({ memberId, lineConnected, lineDisplayName, initialData, readOnlyInfo }: Props) {
   const router = useRouter();
   const [form, setForm] = useState(initialData);
   const [saving, setSaving] = useState(false);
@@ -275,6 +279,46 @@ export default function ProfileEditForm({ memberId, initialData, readOnlyInfo }:
               placeholder="แนะนำตัวเองสั้นๆ..."
             />
           </FieldWithVisibility>
+        </CardContent>
+      </Card>
+
+      {/* LINE connection */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-xs font-medium text-sepia-mid uppercase tracking-widest">
+            การเชื่อมต่อ LINE
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {lineConnected ? (
+            <div className="flex items-center gap-2.5 text-sm">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: "#06C755" }}>
+                <LineIcon className="size-4" />
+              </span>
+              <div>
+                <p className="font-medium text-charcoal">เชื่อมต่อกับ LINE แล้ว</p>
+                {lineDisplayName && (
+                  <p className="text-muted-foreground">{lineDisplayName}</p>
+                )}
+              </div>
+              <span className="ml-auto text-xs text-green-600">✓ เชื่อมต่อแล้ว</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-sm text-muted-foreground">
+                เชื่อมต่อบัญชีกับ LINE เพื่อเข้าสู่ระบบด้วย LINE ในครั้งถัดไป
+              </p>
+              <button
+                type="button"
+                onClick={() => signIn("line", { callbackUrl: "/profile/edit" })}
+                className="flex shrink-0 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: "#06C755" }}
+              >
+                <LineIcon className="size-4" />
+                เชื่อมต่อ LINE
+              </button>
+            </div>
+          )}
         </CardContent>
       </Card>
 

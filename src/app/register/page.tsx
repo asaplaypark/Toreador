@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import LineIcon from "@/components/LineIcon";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -121,6 +123,22 @@ export default function RegisterPage() {
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "กำลังสมัครสมาชิก..." : "สมัครสมาชิก"}
               </Button>
+
+              <div className="flex w-full items-center gap-3 text-xs text-muted-foreground">
+                <div className="h-px flex-1 bg-border" />
+                <span>หรือ</span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => signIn("line", { callbackUrl: "/dashboard" })}
+                className="flex w-full items-center justify-center gap-2.5 rounded-md px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 active:opacity-80"
+                style={{ backgroundColor: "#06C755" }}
+              >
+                <LineIcon className="size-5" />
+                สมัครสมาชิกด้วย LINE
+              </button>
 
               <p className="text-sm text-muted-foreground text-center">
                 มีบัญชีแล้ว?{" "}

@@ -9,30 +9,36 @@ export default async function ProfileEditPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/login?callbackUrl=/profile/edit");
 
-  const member = await prisma.member.findUnique({
-    where: { userId: session.user.id, deletedAt: null },
-    select: {
-      id: true,
-      firstNameTh: true,
-      lastNameTh: true,
-      firstNameEn: true,
-      lastNameEn: true,
-      nickname: true,
-      department: true,
-      yearOfEntry: true,
-      birthDate: true,
-      phone: true,
-      profilePhoto: true,
-      occupation: true,
-      workplace: true,
-      bio: true,
-      lineId: true,
-      website: true,
-      formerFirstName: true,
-      formerLastName: true,
-      fieldVisibility: true,
-    },
-  });
+  const [member, userInfo] = await Promise.all([
+    prisma.member.findUnique({
+      where: { userId: session.user.id, deletedAt: null },
+      select: {
+        id: true,
+        firstNameTh: true,
+        lastNameTh: true,
+        firstNameEn: true,
+        lastNameEn: true,
+        nickname: true,
+        department: true,
+        yearOfEntry: true,
+        birthDate: true,
+        phone: true,
+        profilePhoto: true,
+        occupation: true,
+        workplace: true,
+        bio: true,
+        lineId: true,
+        website: true,
+        formerFirstName: true,
+        formerLastName: true,
+        fieldVisibility: true,
+      },
+    }),
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { lineUserId: true, lineDisplayName: true },
+    }),
+  ]);
 
   if (!member) redirect("/member/register");
 
@@ -50,6 +56,8 @@ export default async function ProfileEditPage() {
         </div>
         <ProfileEditForm
           memberId={member.id}
+          lineConnected={!!userInfo?.lineUserId}
+          lineDisplayName={userInfo?.lineDisplayName ?? null}
           initialData={{
             firstNameTh: member.firstNameTh,
             lastNameTh: member.lastNameTh,
