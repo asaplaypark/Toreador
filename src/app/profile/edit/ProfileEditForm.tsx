@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import AvatarUpload from "@/components/AvatarUpload";
 import LineIcon from "@/components/LineIcon";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -167,8 +166,9 @@ export default function ProfileEditForm({ memberId, lineConnected, lineDisplayNa
               <button
                 type="button"
                 onClick={async () => {
-                  await fetch("/api/auth/link-line/prepare", { method: "POST" });
-                  await signIn("line", { callbackUrl: "/api/auth/link-line" });
+                  const res = await fetch("/api/auth/link-line/prepare", { method: "POST" });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
                 }}
                 className="flex shrink-0 items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
                 style={{ backgroundColor: "#06C755" }}
